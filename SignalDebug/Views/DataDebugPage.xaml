@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SignalDebug.Views.DataDebugPage"
+             Title="DataDebugPage">
+    <VerticalStackLayout>
+        <VerticalStackLayout.Background>
+            <LinearGradientBrush>
+                <GradientStop Color="WhiteSmoke"
+                          Offset="0.1" />
+                <GradientStop Color="LightBlue"
+                          Offset="1.0" />
+            </LinearGradientBrush>
+        </VerticalStackLayout.Background>
+        <Label x:Name="sourcename" HeightRequest="50" BackgroundColor="Transparent" TextColor="Black" Text="{Binding DataInfo.DataName}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+        <Label x:Name="rec" BackgroundColor="Transparent" TextColor="Black"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Grid.Column="0" x:Name="allbutton" Text="记录全部数据" Clicked="Button_Clicked"/>
+            <Button Grid.Row="0" Grid.Column="1" x:Name="allsignaldatabutton" Text="记录信号数据" Clicked="Button_Clicked_1" />
+            <Button Grid.Row="0" Grid.Column="2" x:Name="allsignaldatabutton1" Text="记录信号数据" Clicked="Button_Clicked_1" />
+            <Button Grid.Row="1" Grid.Column="0" x:Name="allbutton2" Text="导出全部数据" Clicked="allbutton2_Clicked" />
+            <Button Grid.Row="1" Grid.Column="1" x:Name="allsignaldatabutton2" Text="导出信号数据" Clicked="Button_Clicked_1" />
+            <Button Grid.Row="1" Grid.Column="2" x:Name="allsignaldatabutton3" Text="导出信号数据" Clicked="Button_Clicked_1" />
+        </Grid>
+
+
+        <Frame Margin="3" Padding="0" BackgroundColor="Transparent">
+            <VerticalStackLayout x:Name="verticalStackLayout"></VerticalStackLayout>
+        </Frame>
+    </VerticalStackLayout>
+</ContentPage>

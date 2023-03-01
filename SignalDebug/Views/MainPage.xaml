@@ -1,41 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SignalDebug.MainPage">
+             x:Class="SignalDebug.Views.MainPage">
+    <ContentPage.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="BlueViolet"
+                          Offset="0.1" />
+            <GradientStop Color="WhiteSmoke"
+                          Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    <VerticalStackLayout>
+        <Frame Margin="15" Padding="0" BackgroundColor="Transparent">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="75"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <!--<Button BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Green" Command="{Binding AddDataInfoCommand}" Grid.Column="0" Text="&#xe60e;"  FontFamily="IconFont" FontSize="Medium"/>-->
+                <!--<Button BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Green" Command="{Binding AddDataInfoCommand}" Grid.Column="0" Text="&#xe60e;"  FontFamily="IconFont" FontSize="Medium"/>-->
 
-    <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
-
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-
-        </VerticalStackLayout>
-    </ScrollView>
-
+                <Button  Text="添加数据源" Command="{Binding AddDataInfoCommand}"/>
+                <Button  Text="编辑数据源" Command="{Binding EditDataInfoCommand}" Grid.Column="1"/>
+                <Button  Text="删除数据源" Command="{Binding DeleteDataInfoCommand}" Grid.Column="2"/>
+            </Grid>
+        </Frame>
+        <Frame Padding="0" BackgroundColor="Transparent" Margin="15">
+            <ListView ItemsSource="{Binding DataInfos}" ItemSelected="ListView_ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="80"/>
+                                </Grid.ColumnDefinitions>
+                                <Label VerticalTextAlignment="Center" Text="{Binding DataName}"/>
+                                <Button BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="Blue" FontFamily="IconFont" FontSize="Medium" Grid.Column="1" CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Frame>
+    </VerticalStackLayout>
 </ContentPage>

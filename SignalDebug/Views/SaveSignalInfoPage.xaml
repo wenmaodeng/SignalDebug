@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SignalDebug.Views.SaveSignalInfoPage"
+             xmlns:converters="clr-namespace:SignalDebug.Converters"
+             xmlns:controls="clr-namespace:YunBang.MAUI.UI.InPut;assembly=YunBang.MAUI.UI"
+             Title="SaveSignalInfoPage">
+    <ContentPage.Background>
+        <LinearGradientBrush>
+            <GradientStop Color="BlueViolet"
+                          Offset="0.1" />
+            <GradientStop Color="WhiteSmoke"
+                          Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ContentPage.Resources>
+        <converters:EnumToIntConverter x:Key="enumToInt" />
+    </ContentPage.Resources>
+    <VerticalStackLayout>
+        <Label TextColor="WhiteSmoke" FontSize="Medium" HeightRequest="50" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding Title}"/>
+        <Frame Margin="3" Padding="0" BorderColor="Transparent" BackgroundColor="Transparent">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <controls:TextInput HeightRequest="45" LableText="信号名称"  EntryText="{Binding SignalInfo.SignalName,Mode=TwoWay}" Grid.Row="0"/>
+                <!--<controls:EnumPickerView HeightRequest="45" LableText="信号类型" SelectedIndex="{Binding SignalInfo.DataType,Converter={StaticResource enumToInt},Mode=TwoWay}" Grid.Row="1"/>-->
+                <controls:TextInput HeightRequest="45" LableText="信号位"  EntryText="{Binding SignalInfo.SignalBit,Mode=TwoWay}" Grid.Row="2"/>
+                <controls:TextInput HeightRequest="45" LableText="计量单位"  EntryText="{Binding SignalInfo.Unit,Mode=TwoWay}" Grid.Row="3"/>
+                <controls:TextInput HeightRequest="45" LableText="描述"  EntryText="{Binding SignalInfo.Describe,Mode=TwoWay}" Grid.Row="4"/>
+                <controls:TextInput HeightRequest="45" LableText="排序序号"  EntryText="{Binding SignalInfo.Sort,Mode=TwoWay}" Grid.Row="5"/>
+                <!--<controls:SwitchView HeightRequest="45" LableText="是否启用" IsToggled="{Binding SignalInfo.Enabled}" Grid.Row="6"/>-->
+
+                <Border HeightRequest="45" WidthRequest="280" Margin="0,5,0,3" Grid.Row="7">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="25"/>
+                    </Border.StrokeShape>
+                    <Button Text="保存" FontSize="Default" Command="{Binding SaveSignalInfoCommand}"></Button>
+                </Border>
+            </Grid>
+        </Frame>
+    </VerticalStackLayout>
+</ContentPage>
