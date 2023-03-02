@@ -5,67 +5,67 @@
              xmlns:controls="clr-namespace:YunBang.MAUI.UI.InPut;assembly=YunBang.MAUI.UI"
              Title="{Binding Title}" Shell.BackgroundColor="#838996" BackgroundColor="#838996">
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="190"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Frame Grid.Row="0"  BorderColor="WhiteSmoke" CornerRadius="5" Margin="3" Padding="3" BackgroundColor="Transparent">
-                <Grid RowSpacing="1">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="190"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Frame Grid.Row="0"  BorderColor="WhiteSmoke" CornerRadius="5" Margin="3" Padding="3" BackgroundColor="Transparent">
+            <Grid RowSpacing="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+                <controls:TextInput HeightRequest="35" FrameColor="Transparent" FrameCornerRadius="5" LableText="数据源名称" Margin="0"  EntryText="{Binding DataInfo.DataName,Mode=TwoWay}" Grid.Row="0"/>
+                <controls:TextInput HeightRequest="35" FrameColor="Transparent" FrameCornerRadius="5" LableText="帧头" Margin="0"  EntryText="{Binding DataInfo.FrameHead,Mode=TwoWay}" Grid.Row="1"/>
+                <controls:TextInput HeightRequest="35" FrameColor="Transparent" FrameCornerRadius="5" LableText="长度" Margin="0"  EntryText="{Binding DataInfo.Lenth,Mode=TwoWay}" Grid.Row="2"/>
+                <BoxView Color="White" HeightRequest="1" HorizontalOptions="Fill"  Grid.Row="3"/>
+                <Grid Grid.Row="4" ColumnSpacing="3">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="3"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition />
                     </Grid.RowDefinitions>
-
-                    <controls:TextInput HeightRequest="35" FrameColor="Gray" FrameCornerRadius="5" LableText="数据源名称" Margin="0"  EntryText="{Binding DataInfo.DataName,Mode=TwoWay}" Grid.Row="0"/>
-                    <controls:TextInput HeightRequest="35" FrameColor="Gray" FrameCornerRadius="5" LableText="帧头" Margin="0"  EntryText="{Binding DataInfo.FrameHead,Mode=TwoWay}" Grid.Row="1"/>
-                    <controls:TextInput HeightRequest="35" FrameColor="Gray" FrameCornerRadius="5" LableText="长度" Margin="0"  EntryText="{Binding DataInfo.Lenth,Mode=TwoWay}" Grid.Row="2"/>
-                    <BoxView Color="White" HeightRequest="1" HorizontalOptions="Fill"  Grid.Row="3"/>
-                    <Grid Grid.Row="4" ColumnSpacing="3">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Button Text="保存数据源"  BackgroundColor="Transparent" Command="{Binding SaveDataInfoCommand}" Grid.Row="0"/>
-                        <Button Text="添加信号" BackgroundColor="Transparent" Command="{Binding AddSignalInfoCommand}" Grid.Column="1" />
-                        <Button Text="编辑信号" BackgroundColor="Transparent" Command="{Binding EditSignalInfoCommand}" Grid.Column="2" />
-                        <Button Text="删除信号" BackgroundColor="Transparent" Command="{Binding DeleteSignalInfoCommand}" Grid.Column="3" />
-                    </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Text="保存数据源"  BackgroundColor="Transparent" Command="{Binding SaveDataInfoCommand}" Grid.Row="0"/>
+                    <Button Text="添加信号" BackgroundColor="Transparent" Command="{Binding AddSignalInfoCommand}" Grid.Column="1" />
+                    <Button Text="编辑信号" BackgroundColor="Transparent" Command="{Binding EditSignalInfoCommand}" Grid.Column="2" />
+                    <Button Text="删除信号" BackgroundColor="Transparent" Command="{Binding DeleteSignalInfoCommand}" Grid.Column="3" />
                 </Grid>
-            </Frame>
+            </Grid>
+        </Frame>
 
-            <Frame Grid.Row="1" BorderColor="WhiteSmoke" CornerRadius="15" Padding="10" Margin="10" BackgroundColor="Transparent"  VerticalOptions="FillAndExpand">
-                <CollectionView ItemsSource="{Binding SignalInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <SwipeView Margin="10,3,10,0">
-                                <SwipeView.LeftItems>
-                                    <SwipeItems>
-                                        <SwipeItem Text="启动"/>
-                                        <SwipeItem Text="编辑"/>
-                                        <SwipeItem Text="删除"/>
-                                    </SwipeItems>
-                                </SwipeView.LeftItems>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Margin="3" HeightRequest="30" VerticalTextAlignment="Center" Text="{Binding SignalName}"/>
-                                </Grid>
-                            </SwipeView>
+        <Frame Grid.Row="1" BorderColor="WhiteSmoke" CornerRadius="15" Padding="10" Margin="10" BackgroundColor="Transparent"  VerticalOptions="FillAndExpand">
+            <CollectionView ItemsSource="{Binding SignalInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView Margin="10,3,10,0">
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="启动"/>
+                                    <SwipeItem Text="编辑"/>
+                                    <SwipeItem Text="删除"/>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Margin="3" HeightRequest="30" VerticalTextAlignment="Center" Text="{Binding SignalName}"/>
+                            </Grid>
+                        </SwipeView>
 
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Frame>
-        </Grid>
-        
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
+    </Grid>
+
 </ContentPage>
