@@ -1,51 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SignalDebug.Views.MainPage">
-    <ContentPage.Background>
-        <LinearGradientBrush>
-            <GradientStop Color="BlueViolet"
-                          Offset="0.1" />
-            <GradientStop Color="WhiteSmoke"
-                          Offset="1.0" />
-        </LinearGradientBrush>
-    </ContentPage.Background>
-    <VerticalStackLayout>
-        <Frame Margin="15" Padding="0" BackgroundColor="Transparent">
-            <Grid>
+             x:Class="SignalDebug.Views.MainPage" BackgroundColor="#838996"  Shell.NavBarIsVisible="False">
+    <Grid Padding="0" BackgroundColor="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Frame Grid.Row="0" Margin="5" Padding="0" BackgroundColor="Transparent" CornerRadius="5">
+            <Grid RowSpacing="3">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="75"/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <!--<Button BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Green" Command="{Binding AddDataInfoCommand}" Grid.Column="0" Text="&#xe60e;"  FontFamily="IconFont" FontSize="Medium"/>-->
-                <!--<Button BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Green" Command="{Binding AddDataInfoCommand}" Grid.Column="0" Text="&#xe60e;"  FontFamily="IconFont" FontSize="Medium"/>-->
-
-                <Button  Text="添加数据源" Command="{Binding AddDataInfoCommand}"/>
-                <Button  Text="编辑数据源" Command="{Binding EditDataInfoCommand}" Grid.Column="1"/>
-                <Button  Text="删除数据源" Command="{Binding DeleteDataInfoCommand}" Grid.Column="2"/>
+                <Button BackgroundColor="Transparent"  Text="添加数据源" Command="{Binding AddDataInfoCommand}"/>
+                <Button  BackgroundColor="Transparent"  Text="编辑数据源" Command="{Binding EditDataInfoCommand}" Grid.Column="1"/>
+                <Button  BackgroundColor="Transparent"  Text="删除数据源" Command="{Binding DeleteDataInfoCommand}" Grid.Column="2"/>
             </Grid>
         </Frame>
-        <Frame Padding="0" BackgroundColor="Transparent" Margin="15">
-            <ListView ItemsSource="{Binding DataInfos}" ItemSelected="ListView_ItemSelected">
-                <ListView.ItemTemplate>
+        
+        <Frame Grid.Row="1" Padding="0" BackgroundColor="Transparent" Margin="5">
+            <CollectionView ItemsSource="{Binding DataInfos}" >
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
+                        <SwipeView Margin="10,3,10,0">
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="启动"/>
+                                    <SwipeItem Text="编辑"/>
+                                    <SwipeItem Text="删除"/>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="80"/>
                                 </Grid.ColumnDefinitions>
-                                <Label VerticalTextAlignment="Center" Text="{Binding DataName}"/>
-                                <Button BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="Blue" FontFamily="IconFont" FontSize="Medium" Grid.Column="1" CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
+                                <Label VerticalTextAlignment="Center" Text="{Binding DataName}" FontSize="Title"/>
+                                <Button Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="White" FontSize="Micro" CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
                             </Grid>
-                        </ViewCell>
+                        </SwipeView>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Frame>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>

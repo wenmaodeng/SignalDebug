@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SignalDebug.Views.SaveDataInfoPage"
              xmlns:controls="clr-namespace:YunBang.MAUI.UI.InPut;assembly=YunBang.MAUI.UI"
-             Title="SaveDataInfoPage">
+             Title="SaveDataInfoPage"  Shell.NavBarIsVisible="False">
     <ContentPage.Background>
         <LinearGradientBrush>
             <GradientStop Color="BlueViolet"

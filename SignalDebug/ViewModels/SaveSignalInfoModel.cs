@@ -18,6 +18,10 @@ namespace SignalDebug.ViewModels
 
         public string Title { get; set; }
         SignalInfo signalInfo = new SignalInfo();
+
+        List<string> items = new List<string> { "布尔类型", "浮点型", "整形" };
+        public List<string> Items
+        { get { return items; } }
         public SignalInfo SignalInfo
         {
             set { SetProperty(ref signalInfo, value); }
