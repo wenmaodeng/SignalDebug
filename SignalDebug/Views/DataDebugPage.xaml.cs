@@ -233,7 +233,6 @@ public partial class DataDebugPage : ContentPage
                     return;
                 }
             }
-            sourcename.BackgroundColor = Colors.Green;
             device.Gatt.RequestMtu(512);
             var servs = await device.Gatt.GetPrimaryServicesAsync();
             bool isfindNotify = false;

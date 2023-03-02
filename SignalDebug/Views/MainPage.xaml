@@ -24,7 +24,7 @@
         </Frame>
         
         <Frame Grid.Row="1" Padding="0" BackgroundColor="Transparent" Margin="5">
-            <CollectionView ItemsSource="{Binding DataInfos}" >
+            <CollectionView ItemsSource="{Binding DataInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <SwipeView Margin="10,3,10,0">

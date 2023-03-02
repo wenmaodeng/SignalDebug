@@ -78,4 +78,11 @@ public partial class SaveDataInfoPage : ContentPage
         SaveDataInfoModel saveDataInfoModel = this.BindingContext as SaveDataInfoModel;
         saveDataInfoModel.SignalInfo = signalInfo;
     }
+
+    private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var signalInfo = e.CurrentSelection.FirstOrDefault() as SignalInfo;
+        SaveDataInfoModel saveDataInfoModel = this.BindingContext as SaveDataInfoModel;
+        saveDataInfoModel.SignalInfo = signalInfo;
+    }
 }

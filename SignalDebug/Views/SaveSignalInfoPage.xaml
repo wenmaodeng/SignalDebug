@@ -5,21 +5,12 @@
              xmlns:converters="clr-namespace:SignalDebug.Converters"
              xmlns:inputcontrols="clr-namespace:YunBang.MAUI.UI.InPut;assembly=YunBang.MAUI.UI"
              xmlns:setcontrols="clr-namespace:YunBang.MAUI.UI.SetValue;assembly=YunBang.MAUI.UI"
-             Title="SaveSignalInfoPage" Shell.NavBarIsVisible="False">
-    <ContentPage.Background>
-        <LinearGradientBrush>
-            <GradientStop Color="BlueViolet"
-                          Offset="0.1" />
-            <GradientStop Color="WhiteSmoke"
-                          Offset="1.0" />
-        </LinearGradientBrush>
-    </ContentPage.Background>
+             Title="{Binding Title}" Shell.BackgroundColor="#838996" BackgroundColor="#838996">
 
     <ContentPage.Resources>
         <converters:EnumToIntConverter x:Key="enumToInt" />
     </ContentPage.Resources>
     <VerticalStackLayout>
-        <Label TextColor="WhiteSmoke" FontSize="Medium" HeightRequest="50" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding Title}"/>
         <Frame Margin="3" Padding="0" BorderColor="Transparent" BackgroundColor="Transparent">
             <Grid>
                 <Grid.ColumnDefinitions>

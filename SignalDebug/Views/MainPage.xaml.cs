@@ -85,5 +85,12 @@ public partial class MainPage : ContentPage
         dataDebugModel.SignalInfos = await temp.GetSignalInfos(dataId);
         await Navigation.PushAsync(new DataDebugPage { BindingContext = dataDebugModel });
     }
+
+    private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var datainfo = e.CurrentSelection.FirstOrDefault() as DataInfo;
+        DataInfoListModel dataInfoListModel = this.BindingContext as DataInfoListModel;
+        dataInfoListModel.DataInfo = datainfo;
+    }
 }
 
