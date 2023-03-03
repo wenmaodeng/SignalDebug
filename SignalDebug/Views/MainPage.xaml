@@ -39,8 +39,12 @@
                             <SwipeView Margin="10,0,10,0" HeightRequest="45">
                                 <SwipeView.LeftItems>
                                     <SwipeItems>
-                                        <SwipeItem Text="编辑" Command="{Binding EditDataInfoCommand}"/>
-                                        <SwipeItem Text="删除" Command="{Binding DeleteDataInfoCommand}"/>
+                                        <SwipeItemView BackgroundColor="Green"  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.EditDataInfoCommand}" >
+                                            <Label HorizontalTextAlignment="Center" VerticalOptions="Fill" VerticalTextAlignment="Center" TextColor="Black" BackgroundColor="Transparent"  Text="编辑"/>
+                                        </SwipeItemView>
+                                        <SwipeItemView BackgroundColor="Red"  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.DeleteDataInfoCommand}">
+                                            <Label HorizontalTextAlignment="Center" VerticalOptions="Fill" VerticalTextAlignment="Center" TextColor="Black" BackgroundColor="Transparent"  Text="删除"/>
+                                        </SwipeItemView>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
                                 <Grid VerticalOptions="Center">
@@ -56,7 +60,7 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </Grid>
-            
+
         </Frame>
     </Grid>
 </ContentPage>

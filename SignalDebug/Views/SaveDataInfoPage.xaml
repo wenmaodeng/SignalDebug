@@ -52,14 +52,18 @@
                 <Label Grid.Row="0" FontSize="Title" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="Center" VerticalTextAlignment="Center" Text="信号列表"/>
                 <Button Grid.Row="0" BorderColor="Transparent"  FontSize="Large"  BackgroundColor="Transparent" HorizontalOptions="End"  VerticalOptions="Center"  Text="+" Command="{Binding AddSignalInfoCommand}"/>
                 <BoxView Grid.Row="1" Color="White" CornerRadius="1" Margin="3,0,3,0"/>
-                <CollectionView Grid.Row="2"  ItemsSource="{Binding SignalInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
+                <CollectionView x:Name="collectionView" Grid.Row="2"  ItemsSource="{Binding SignalInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView Margin="10,0,10,0" HeightRequest="45">
                                 <SwipeView.LeftItems>
                                     <SwipeItems>
-                                        <SwipeItem Text="编辑" Command="{Binding EditSignalInfoCommand}"/>
-                                        <SwipeItem Text="删除" Command="{Binding DeleteSignalInfoCommand}"/>
+                                        <SwipeItemView BackgroundColor="Green"  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.EditSignalInfoCommand}" >
+                                            <Label HorizontalTextAlignment="Center" VerticalOptions="Fill" VerticalTextAlignment="Center" TextColor="Black" BackgroundColor="Transparent"  Text="编辑"/>
+                                        </SwipeItemView>
+                                        <SwipeItemView BackgroundColor="Red"  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.DeleteSignalInfoCommand}">
+                                            <Label HorizontalTextAlignment="Center" VerticalOptions="Fill" VerticalTextAlignment="Center" TextColor="Black" BackgroundColor="Transparent"  Text="删除"/>
+                                        </SwipeItemView>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
                                 <Grid VerticalOptions="Center">
