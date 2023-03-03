@@ -10,7 +10,7 @@
             <RowDefinition Height="190"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Frame Grid.Row="0"  BorderColor="WhiteSmoke" CornerRadius="5" Margin="3" Padding="3" BackgroundColor="Transparent">
+        <Frame Grid.Row="0"  BorderColor="WhiteSmoke" CornerRadius="5" Margin="5" Padding="3" BackgroundColor="Transparent">
             <Grid RowSpacing="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -42,29 +42,39 @@
             </Grid>
         </Frame>
 
-        <Frame Grid.Row="1" BorderColor="WhiteSmoke" CornerRadius="15" Padding="10" Margin="10" BackgroundColor="Transparent"  VerticalOptions="FillAndExpand">
-            <CollectionView ItemsSource="{Binding SignalInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <SwipeView Margin="10,3,10,0">
-                            <SwipeView.LeftItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="启动"/>
-                                    <SwipeItem Text="编辑"/>
-                                    <SwipeItem Text="删除"/>
-                                </SwipeItems>
-                            </SwipeView.LeftItems>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Margin="3" HeightRequest="30" VerticalTextAlignment="Center" Text="{Binding SignalName}"/>
-                            </Grid>
-                        </SwipeView>
+        <Frame Grid.Row="1" BorderColor="WhiteSmoke" CornerRadius="15" Padding="3" Margin="5" BackgroundColor="Transparent"  VerticalOptions="FillAndExpand">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" FontSize="Title" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="Center" VerticalTextAlignment="Center" Text="信号列表"/>
+                <Button Grid.Row="0" BorderColor="Transparent"  FontSize="Large"  BackgroundColor="Transparent" HorizontalOptions="End"  VerticalOptions="Center"  Text="+" Command="{Binding AddSignalInfoCommand}"/>
+                <BoxView Grid.Row="1" Color="White" CornerRadius="1" Margin="3,0,3,0"/>
+                <CollectionView Grid.Row="2"  ItemsSource="{Binding SignalInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView Margin="10,0,10,0" HeightRequest="45">
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="编辑" Command="{Binding EditSignalInfoCommand}"/>
+                                        <SwipeItem Text="删除" Command="{Binding DeleteSignalInfoCommand}"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <Grid VerticalOptions="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Margin="3" HeightRequest="30" VerticalTextAlignment="Center" Text="{Binding SignalName}"/>
+                                </Grid>
+                            </SwipeView>
 
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+
         </Frame>
     </Grid>
 

@@ -11,7 +11,7 @@
         <converters:EnumToIntConverter x:Key="enumToInt" />
     </ContentPage.Resources>
     <VerticalStackLayout>
-        <Frame Margin="3" Padding="0" BorderColor="Transparent" BackgroundColor="Transparent">
+        <Frame Margin="5" Padding="3" BorderColor="Transparent" BackgroundColor="Transparent">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

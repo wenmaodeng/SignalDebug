@@ -3,9 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SignalDebug.Views.DataDebugPage"
              Title="{Binding DataInfo.DataName}" Shell.BackgroundColor="#838996" BackgroundColor="#838996">
-    <VerticalStackLayout>
-        <Label x:Name="rec" BackgroundColor="Transparent" TextColor="Black"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-        <Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="rec" Grid.Row="0" BackgroundColor="Transparent" TextColor="Black"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+        <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -13,19 +18,26 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
-                <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" x:Name="allbutton" Text="记录全部数据" Clicked="Button_Clicked"/>
-            <Button Grid.Row="0" Grid.Column="1" x:Name="allsignaldatabutton" Text="记录信号数据" Clicked="Button_Clicked_1" />
-            <Button Grid.Row="0" Grid.Column="2" x:Name="allsignaldatabutton1" Text="记录信号数据" Clicked="Button_Clicked_1" />
-            <Button Grid.Row="1" Grid.Column="0" x:Name="allbutton2" Text="导出全部数据" Clicked="allbutton2_Clicked" />
-            <Button Grid.Row="1" Grid.Column="1" x:Name="allsignaldatabutton2" Text="导出信号数据" Clicked="Button_Clicked_1" />
-            <Button Grid.Row="1" Grid.Column="2" x:Name="allsignaldatabutton3" Text="导出信号数据" Clicked="Button_Clicked_1" />
+            <!--<Button Grid.Column="0" x:Name="allbutton" Text="记录全部数据" BackgroundColor="Transparent" Clicked="Button_Clicked"/>
+            <Button Grid.Column="1" x:Name="allsignaldatabutton" Text="记录信号数据" BackgroundColor="Transparent" Clicked="Button_Clicked_1" />
+            <Button Grid.Column="2" x:Name="allsignaldatabutton1" Text="记录信号数据" BackgroundColor="Transparent" Clicked="Button_Clicked_1" />-->
+            <Picker HorizontalOptions="Fill" VerticalOptions="Center" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>记录全部数据</x:String>
+                        <x:String>记录全部信号列表数据</x:String>
+                        <x:String>记录当前信号列表数据</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Button x:Name="RecordData" Grid.Column="1" Text="记录" Clicked="Button_Clicked" BackgroundColor="Transparent"/>
+            <Button x:Name="ExportData" BackgroundColor="Transparent" Clicked="ExportData_Clicked" Grid.Column="2" Text="导出数据"/>
         </Grid>
 
 
-        <Frame Margin="3" Padding="0" BackgroundColor="Transparent">
+        <Frame Grid.Row="2" Margin="3" Padding="0" BackgroundColor="Transparent">
             <VerticalStackLayout x:Name="verticalStackLayout"></VerticalStackLayout>
         </Frame>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>

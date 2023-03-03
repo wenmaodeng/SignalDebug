@@ -22,31 +22,41 @@
                 <Button  BackgroundColor="Transparent"  Text="删除数据源" Command="{Binding DeleteDataInfoCommand}" Grid.Column="2"/>
             </Grid>
         </Frame>
-        
-        <Frame Grid.Row="1" Padding="0" BackgroundColor="Transparent" Margin="5">
-            <CollectionView ItemsSource="{Binding DataInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <SwipeView Margin="10,3,10,0">
-                            <SwipeView.LeftItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="启动"/>
-                                    <SwipeItem Text="编辑"/>
-                                    <SwipeItem Text="删除"/>
-                                </SwipeItems>
-                            </SwipeView.LeftItems>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="80"/>
-                                </Grid.ColumnDefinitions>
-                                <Label VerticalTextAlignment="Center" Text="{Binding DataName}" FontSize="Title"/>
-                                <Button Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="White" FontSize="Micro" CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
-                            </Grid>
-                        </SwipeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+
+        <Frame Grid.Row="1" Padding="0" BackgroundColor="Transparent" Margin="5" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" FontSize="Title" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="Center" VerticalTextAlignment="Center" Text="数据源列表"/>
+                <Button Grid.Row="0" BorderColor="Transparent"  FontSize="Large"  BackgroundColor="Transparent" HorizontalOptions="End"  VerticalOptions="Center"  Text="+" Command="{Binding AddDataInfoCommand}"/>
+                <BoxView Grid.Row="1"  Color="White" CornerRadius="1" Margin="3,0,3,0"/>
+                <CollectionView Grid.Row="2" ItemsSource="{Binding DataInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView Margin="10,0,10,0" HeightRequest="45">
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="编辑" Command="{Binding EditDataInfoCommand}"/>
+                                        <SwipeItem Text="删除" Command="{Binding DeleteDataInfoCommand}"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <Grid VerticalOptions="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label VerticalTextAlignment="Center" Text="{Binding DataName}" FontSize="Title"/>
+                                    <Button VerticalOptions="Center" HorizontalOptions="Fill" Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="White" FontSize="Micro" CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
+                                </Grid>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+            
         </Frame>
     </Grid>
 </ContentPage>

@@ -93,6 +93,10 @@ public partial class DataDebugPage : ContentPage
                 alldatafilename = Path.Combine(path, fn);
             }
             string ssss = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + string.Join(",", tempstrs);
+            temp = ssss;
+
+            setstr();
+
 
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(alldatafilename, true))
             {
@@ -100,13 +104,12 @@ public partial class DataDebugPage : ContentPage
                 alldatacount++;
                 if (MainThread.IsMainThread)
                 {
-                    allbutton.Text = $"记录全部数据{alldatacount}";
+                    RecordData.Text = $"已记录数量【{alldatacount}】";
                 }
                 else
                 {
-                    MainThread.BeginInvokeOnMainThread(() => { allbutton.Text = $"记录全部数据{alldatacount}"; });
+                    MainThread.BeginInvokeOnMainThread(() => { RecordData.Text = $"已记录数量【{alldatacount}】"; });
                 }
-
             }
         }
 
@@ -293,23 +296,11 @@ public partial class DataDebugPage : ContentPage
         Button button = sender as Button;
         if (button != null)
         {
-            button.BackgroundColor = IsSaveAllData ? Colors.Green : Colors.Gray;
+            button.BackgroundColor = IsSaveAllData ? Colors.Green : Colors.Transparent;
         }
     }
 
-    private void Button_Clicked_1(object sender, EventArgs e)
-    {
-        IsSaveAllSignalData = !IsSaveAllSignalData;
-        if (!IsSaveAllSignalData)
-            allsignaldatafilename = string.Empty;
-        Button button = sender as Button;
-        if (button != null)
-        {
-            button.BackgroundColor = IsSaveAllSignalData ? Colors.Green : Colors.Gray;
-        }
-    }
-
-    private async void allbutton2_Clicked(object sender, EventArgs e)
+    private async void ExportData_Clicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new ShareDirectoryPage());
     }
