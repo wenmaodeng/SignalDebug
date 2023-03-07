@@ -7,24 +7,28 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="190"/>
+            <RowDefinition Height="139"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Frame Grid.Row="0"  BorderColor="WhiteSmoke" CornerRadius="5" Margin="5" Padding="3" BackgroundColor="Transparent">
-            <Grid RowSpacing="1">
+            <Grid RowSpacing="1" Grid.ColumnSpan="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
-                    <RowDefinition Height="3"/>
-                    <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
 
                 <controls:TextInput HeightRequest="35" FrameColor="Transparent" FrameCornerRadius="5" LableText="数据源名称" Margin="0"  EntryText="{Binding DataInfo.DataName,Mode=TwoWay}" Grid.Row="0"/>
                 <controls:TextInput HeightRequest="35" FrameColor="Transparent" FrameCornerRadius="5" LableText="帧头" Margin="0"  EntryText="{Binding DataInfo.FrameHead,Mode=TwoWay}" Grid.Row="1"/>
                 <controls:TextInput HeightRequest="35" FrameColor="Transparent" FrameCornerRadius="5" LableText="长度" Margin="0"  EntryText="{Binding DataInfo.Lenth,Mode=TwoWay}" Grid.Row="2"/>
-                <BoxView Color="White" HeightRequest="1" HorizontalOptions="Fill"  Grid.Row="3"/>
-                <Grid Grid.Row="4" ColumnSpacing="3">
+                <BoxView Color="White" VerticalOptions="Fill" Margin="0,5,0,5" WidthRequest="3" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3"/>
+                <Button Text="保存" FontSize="Title"  BackgroundColor="Transparent" Command="{Binding SaveDataInfoCommand}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="2"/>
+                <!--<Grid Grid.Row="4" ColumnSpacing="3">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                     </Grid.RowDefinitions>
@@ -38,7 +42,7 @@
                     <Button Text="添加信号" BackgroundColor="Transparent" Command="{Binding AddSignalInfoCommand}" Grid.Column="1" />
                     <Button Text="编辑信号" BackgroundColor="Transparent" Command="{Binding EditSignalInfoCommand}" Grid.Column="2" />
                     <Button Text="删除信号" BackgroundColor="Transparent" Command="{Binding DeleteSignalInfoCommand}" Grid.Column="3" />
-                </Grid>
+                </Grid>-->
             </Grid>
         </Frame>
 

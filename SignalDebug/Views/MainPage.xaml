@@ -4,26 +4,9 @@
              x:Class="SignalDebug.Views.MainPage" BackgroundColor="#838996"  Shell.NavBarIsVisible="False">
     <Grid Padding="0" BackgroundColor="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Frame Grid.Row="0" Margin="5" Padding="0" BackgroundColor="Transparent" CornerRadius="5">
-            <Grid RowSpacing="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button BackgroundColor="Transparent"  Text="添加数据源" Command="{Binding AddDataInfoCommand}"/>
-                <Button  BackgroundColor="Transparent"  Text="编辑数据源" Command="{Binding EditDataInfoCommand}" Grid.Column="1"/>
-                <Button  BackgroundColor="Transparent"  Text="删除数据源" Command="{Binding DeleteDataInfoCommand}" Grid.Column="2"/>
-            </Grid>
-        </Frame>
-
-        <Frame Grid.Row="1" Padding="0" BackgroundColor="Transparent" Margin="5" >
+        <Frame Padding="0" BackgroundColor="Transparent" Margin="5" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="45"/>
@@ -47,13 +30,13 @@
                                         </SwipeItemView>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid VerticalOptions="Center">
+                                <Grid VerticalOptions="Center" BackgroundColor="Red">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label VerticalTextAlignment="Center" Text="{Binding DataName}" FontSize="Title"/>
-                                    <Button VerticalOptions="Center" HorizontalOptions="Fill" Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="White" FontSize="Micro" CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
+                                    <Label VerticalTextAlignment="Center" TextColor="Black" Text="{Binding DataName}" FontSize="Title"/>
+                                    <Button VerticalOptions="Center" HorizontalOptions="Fill" Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="Red" FontSize="Micro" CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
                                 </Grid>
                             </SwipeView>
                         </DataTemplate>

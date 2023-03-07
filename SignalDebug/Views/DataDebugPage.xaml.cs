@@ -9,16 +9,15 @@ namespace SignalDebug.Views;
 
 public partial class DataDebugPage : ContentPage
 {
-    static string path = FileSystem.Current.AppDataDirectory + "\\record\\" + DateTime.Now.ToString("yyyy_MM_dd");
-    static string alldatafilename = string.Empty;
-    static string allsignaldatafilename = string.Empty;
-    static string currentsignaldatafilename = string.Empty;
-    int alldatacount = 0;
-    int allsignaldatacount = 0;
-    int currentsignaldatacount = 0;
+    string path = FileSystem.Current.AppDataDirectory + "\\record\\" + DateTime.Now.ToString("yyyy_MM_dd");
+    string filename = string.Empty;
+    int datacount = 0;
     GattCharacteristic gattCharacteristic = null;
-    static bool IsSaveAllData = false;
-    static bool IsSaveAllSignalData = false;
+    /// <summary>
+    /// 0 记录全部数据 1 记录全部信号列表数据 2 记录当前信号列表数据
+    /// </summary>
+    int recordtype = 2;
+    static bool IsSaveData = false;
     BluetoothDevice device = null;
     private static List<Element> contentViews = new List<Element>();
     private static DataDebugModel dataDebugModel = null;
@@ -27,13 +26,47 @@ public partial class DataDebugPage : ContentPage
 		InitializeComponent();
         ConnectBluetooth();
     }
-    private void ss()
+    private void SaveData(string data)
+    {
+        if (string.IsNullOrEmpty(path))
+            return;
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        if (string.IsNullOrEmpty(filename))
+        {
+            string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
+            filename = Path.Combine(path, fn);
+        }
+        data = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + data;
+
+        using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename, true))
+        {
+            file.WriteLine(data);
+            datacount++;
+            if (MainThread.IsMainThread)
+            {
+                RecordData.Text = $"已记录数量【{datacount}】";
+            }
+            else
+            {
+                MainThread.BeginInvokeOnMainThread(() => { RecordData.Text = $"已记录数量【{datacount}】"; });
+            }
+        }
+    }
+    protected override void OnAppearing()
+    {
+        InitCintrol();
+        base.OnAppearing();
+    }
+    private void InitCintrol()
     {
         dataDebugModel = this.BindingContext as DataDebugModel;
         contentViews.Clear();
         verticalStackLayout.Children.Clear();
 
-        if (temp != null && dataDebugModel.SignalInfos != null && dataDebugModel.SignalInfos.Count > 0)
+        if (dataDebugModel.SignalInfos != null && dataDebugModel.SignalInfos.Count > 0)
         {
             for (int i = 0; i < dataDebugModel.SignalInfos.Count; i++)
             {
@@ -64,97 +97,47 @@ public partial class DataDebugPage : ContentPage
                 }
                 //}
             }
-            //set();
-            timer = new Timer(new TimerCallback((s) => set()), null, TimeSpan.Zero, TimeSpan.FromMilliseconds(200));
         }
     }
-    Timer timer = null;
 
-    private void set()
+        //}
+        /// <summary>
+        /// 处理数据
+        /// </summary>
+        /// <param name="data"></param>
+        private void HandleData(string data)
     {
-        var random = new Random();
-        string tempstr = "3,4,5,6,7,8,4,3,8,1,2,3,2,1,2,3,2,1";
-
-        string[] tempstrs = tempstr.Split(',');
-        for (int i = 0; i < tempstrs.Length; i++)
+        string[] tempstrs = data.Split(',');
+        if (recordtype == 0)
         {
-            tempstrs[i] = random.Next(20).ToString();
-        }
-        if (IsSaveAllData)
-        {
-
-            if (!Directory.Exists(path))
+            if (IsSaveData)
             {
-                Directory.CreateDirectory(path);
-            }
-            if (string.IsNullOrEmpty(alldatafilename))
-            {
-                string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
-                alldatafilename = Path.Combine(path, fn);
-            }
-            string ssss = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + string.Join(",", tempstrs);
-            temp = ssss;
 
-            setstr();
-
-
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(alldatafilename, true))
-            {
-                file.WriteLine(ssss);
-                alldatacount++;
-                if (MainThread.IsMainThread)
-                {
-                    RecordData.Text = $"已记录数量【{alldatacount}】";
-                }
-                else
-                {
-                    MainThread.BeginInvokeOnMainThread(() => { RecordData.Text = $"已记录数量【{alldatacount}】"; });
-                }
             }
         }
+        else if (recordtype == 1)
+        {
+            if (IsSaveData)
+            {
 
+            }
+        }
+        else if (recordtype == 2)
+        {
 
+        }
         if (dataDebugModel != null)
         {
             dataDebugModel.SignalInfos.ForEach(s =>
             {
                 string value = tempstrs[s.SignalBit];
-                var sss = contentViews.FirstOrDefault(x => x.ClassId == s.SignalId);
+                var element = contentViews.FirstOrDefault(x => x.ClassId == s.SignalId);
                 switch (s.DataType)
                 {
                     case Models.DataType.BoolSignal:
                         break;
                     case Models.DataType.FloatSignal:
-                        TextDisplay textShowFloatSignal = sss as TextDisplay;
-                        textShowFloatSignal.TextValue = value;
-                        break;
-                    case Models.DataType.IntSignal:
-                        TextDisplay textShowFloatIntSignal = sss as TextDisplay;
-                        textShowFloatIntSignal.TextValue = value;
-                        break;
-                    default:
-                        break;
-                }
-            });
-        }
-
-    }
-
-    private void set(string temp)
-    {
-        string[] tempstrs = temp.Split(',');
-        if (dataDebugModel != null)
-        {
-            dataDebugModel.SignalInfos.ForEach(s =>
-            {
-                string value = tempstrs[s.SignalBit];
-                var sss = contentViews.FirstOrDefault(x => x.ClassId == s.SignalId);
-                switch (s.DataType)
-                {
-                    case Models.DataType.BoolSignal:
-                        break;
-                    case Models.DataType.FloatSignal:
-                        TextDisplay textShowFloatSignal = sss as TextDisplay;
+                        TextDisplay textShowFloatSignal = element as TextDisplay;
                         if (MainThread.IsMainThread)
                         {
                             textShowFloatSignal.TextValue = value;
@@ -165,7 +148,7 @@ public partial class DataDebugPage : ContentPage
                         }
                         break;
                     case Models.DataType.IntSignal:
-                        TextDisplay textShowFloatIntSignal = sss as TextDisplay;
+                        TextDisplay textShowFloatIntSignal = element as TextDisplay;
                         if (MainThread.IsMainThread)
                         {
                             textShowFloatIntSignal.TextValue = value;
@@ -181,16 +164,8 @@ public partial class DataDebugPage : ContentPage
             });
         }
     }
-    protected override void OnAppearing()
-    {
-
-
-        ss();
-        base.OnAppearing();
-    }
     protected override void OnDisappearing()
     {
-        timer?.Dispose();
         if (gattCharacteristic != null)
         {
             gattCharacteristic.CharacteristicValueChanged -= Chars_CharacteristicValueChanged;
@@ -259,45 +234,52 @@ public partial class DataDebugPage : ContentPage
                 if (isfindNotify)
                     break;
             }
-            await DisplayAlert("提示", "未找到可用服务特征", "确认");
+            if (!isfindNotify)
+                await DisplayAlert("提示", "未找到可用服务特征", "确认");
         }
     }
-    string temp = string.Empty;
+    string recdata = string.Empty;
     private void Chars_CharacteristicValueChanged(object sender, GattCharacteristicValueChangedEventArgs e)
     {
-        var redata = Encoding.ASCII.GetString(e.Value);
-        set(redata);
-
-        Debug.WriteLine(redata);
-        temp = DateTime.Now.ToString() + "：" + redata;
-        setstr();
+        recdata = Encoding.ASCII.GetString(e.Value);
+        HandleData(recdata);
+        DisplayData();
     }
-    private void setstr()
+    private void DisplayData()
     {
         if (MainThread.IsMainThread)
         {
-            rec.Text = temp;
+            rec.Text =DateTime.Now.ToString("yyyyMMddHHmmss") +":"+ recdata;
         }
         else
         {
-            MainThread.BeginInvokeOnMainThread(setstr);
+            MainThread.BeginInvokeOnMainThread(DisplayData);
         }
     }
 
     private void Button_Clicked(object sender, EventArgs e)
     {
-        IsSaveAllData = !IsSaveAllData;
-        if (!IsSaveAllData)
+        if(recordtype==2)
         {
-            alldatacount = 0;
-            alldatafilename = string.Empty;
+            datacount++;
+            SaveData(recdata);
         }
+        else
+        {
+            IsSaveData = !IsSaveData;
+            if (!IsSaveData)
+            {
+                datacount = 0;
+                filename = string.Empty;
+            }
 
-        Button button = sender as Button;
-        if (button != null)
-        {
-            button.BackgroundColor = IsSaveAllData ? Colors.Green : Colors.Transparent;
+            Button button = sender as Button;
+            if (button != null)
+            {
+                button.BackgroundColor = IsSaveData ? Colors.Green : Colors.Transparent;
+            }
         }
+        
     }
 
     private async void ExportData_Clicked(object sender, EventArgs e)
