@@ -9,6 +9,7 @@ public partial class ShareFilePage : ContentPage
 	}
     protected override void OnAppearing()
     {
+        verticalStackLayout.Children.Clear();
         var files = Directory.GetFiles(Path);
         foreach (var file in files)
         {

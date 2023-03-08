@@ -10,6 +10,7 @@ public partial class ShareDirectoryPage : ContentPage
 	}
     protected override void OnAppearing()
     {
+        verticalStackLayout.Children.Clear();
         if (string.IsNullOrEmpty(DirectoryPath))
             return;
         if (!Directory.Exists(DirectoryPath))

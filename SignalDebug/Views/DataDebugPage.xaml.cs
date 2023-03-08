@@ -4,7 +4,6 @@ using SignalDebug.ViewModels;
 using System.Diagnostics;
 using System.Text;
 using YunBang.MAUI.UI.OutDisplay;
-using static CoreFoundation.DispatchSource;
 
 namespace SignalDebug.Views;
 
@@ -31,7 +30,7 @@ public partial class DataDebugPage : ContentPage
     /// <summary>
     /// 是否记录数据
     /// </summary>
-    static bool IsSaveData = false;
+    bool IsSaveData = false;
     /// <summary>
     /// 连接的蓝牙设备信息
     /// </summary>
@@ -43,11 +42,11 @@ public partial class DataDebugPage : ContentPage
     /// <summary>
     /// 信号控件集合
     /// </summary>
-    private static List<Element> contentViews = new List<Element>();
+    private List<Element> contentViews = new List<Element>();
     /// <summary>
     /// 页面绑定的数据源信息
     /// </summary>
-    private static DataDebugModel dataDebugModel = null;
+    private DataDebugModel dataDebugModel = null;
     public DataDebugPage()
 	{
 		InitializeComponent();
@@ -55,42 +54,50 @@ public partial class DataDebugPage : ContentPage
     }
     private void SaveData(string data)
     {
-        if (string.IsNullOrEmpty(path))
+        try
         {
-            return;
-        }
-        
-        if (string.IsNullOrEmpty(filename))
-        {
-            return;
-        }
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
 
-        if(recordtype==2)
-        {
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename, true))
+            if (string.IsNullOrEmpty(filename))
             {
-                file.WriteLine(data);
+                return;
+            }
+
+            if (recordtype == 2)
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename, true))
+                {
+                    file.WriteLine(data);
+                }
+            }
+            else
+            {
+                if (streamWriter != null)
+                {
+                    streamWriter.WriteLine(data);
+                }
+            }
+            datacount++;
+            if (MainThread.IsMainThread)
+            {
+                RecordData.Text = $"记录【{datacount}】";
+            }
+            else
+            {
+                MainThread.BeginInvokeOnMainThread(() => { RecordData.Text = $"记录【{datacount}】"; });
             }
         }
-        else
+        catch
         {
-            if (streamWriter!=null)
-            {
-                streamWriter.WriteLine(data);
-            }
-        }
-        datacount++;
-        if (MainThread.IsMainThread)
-        {
-            RecordData.Text = $"记录【{datacount}】";
-        }
-        else
-        {
-            MainThread.BeginInvokeOnMainThread(() => { RecordData.Text = $"记录【{datacount}】"; });
+
         }
     }
     protected override void OnAppearing()
     {
+        InitCintrol();
         picker.SelectedIndex = 2;
         path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
         if (!Directory.Exists(path))
@@ -99,7 +106,7 @@ public partial class DataDebugPage : ContentPage
         }
         string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
         filename = Path.Combine(path, fn);
-        InitCintrol();
+        
         base.OnAppearing();
     }
     private void InitCintrol()
@@ -324,16 +331,18 @@ public partial class DataDebugPage : ContentPage
     {
         if (recordtype == 2)
         {
-            string[] tempstrs = recdata.Split(',');
-            if (tempstrs.Length < 2)
-                return;
-            if (dataDebugModel == null)
-                return;
-            if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
-                return;
-            if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
-                return;
-            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + GetSignals(tempstrs);
+            recdata = "1,2,3,4,5,6,7,8,9";
+            //string[] tempstrs = recdata.Split(',');
+            //if (tempstrs.Length < 2)
+            //    return;
+            //if (dataDebugModel == null)
+            //    return;
+            //if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
+            //    return;
+            //if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
+            //    return;
+            //recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + GetSignals(tempstrs);
+            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + recdata;
             SaveData(recdata);
         }
         else
