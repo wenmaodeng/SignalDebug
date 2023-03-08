@@ -99,7 +99,13 @@ public partial class DataDebugPage : ContentPage
     {
         InitCintrol();
         picker.SelectedIndex = 2;
-        path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+
+        if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+            path = FileSystem.Current.AppDataDirectory + "/currentsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
+        else
+            path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+
+
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
@@ -372,15 +378,25 @@ public partial class DataDebugPage : ContentPage
         string temp = FileSystem.Current.AppDataDirectory;
         if (recordtype == 0)
         {
-            temp = FileSystem.Current.AppDataDirectory + "\\alldatas\\";
+            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+                temp = FileSystem.Current.AppDataDirectory + "/alldatas/";
+            else
+                temp = FileSystem.Current.AppDataDirectory + "\\alldatas\\";
         }
         else if (recordtype == 1)
         {
-            temp = FileSystem.Current.AppDataDirectory + "\\allsignals\\";
+            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+                temp = FileSystem.Current.AppDataDirectory + "/allsignals/";
+            else
+                temp = FileSystem.Current.AppDataDirectory + "\\allsignals\\";
+
         }
         else if (recordtype == 2)
         {
-            temp = FileSystem.Current.AppDataDirectory + "\\currentsignals\\";
+            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+                temp = FileSystem.Current.AppDataDirectory + "/currentsignals/";
+            else
+                temp = FileSystem.Current.AppDataDirectory + "\\currentsignals\\";
         }
         await Navigation.PushAsync(new ShareDirectoryPage { DirectoryPath = temp });
     }
@@ -397,7 +413,10 @@ public partial class DataDebugPage : ContentPage
             recordtype = picker.SelectedIndex;
             if (recordtype == 0)
             {
-                path = FileSystem.Current.AppDataDirectory + "\\alldatas\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+                    path = FileSystem.Current.AppDataDirectory + "/alldatas/" + DateTime.Now.ToString("yyyy_MM_dd");
+                else
+                    path = FileSystem.Current.AppDataDirectory + "\\alldatas\\" + DateTime.Now.ToString("yyyy_MM_dd");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
@@ -408,7 +427,10 @@ public partial class DataDebugPage : ContentPage
             }
             else if (recordtype == 1)
             {
-                path = FileSystem.Current.AppDataDirectory + "\\allsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+                    path = FileSystem.Current.AppDataDirectory + "/allsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
+                else
+                    path = FileSystem.Current.AppDataDirectory + "\\allsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
@@ -419,7 +441,10 @@ public partial class DataDebugPage : ContentPage
             }
             else if (recordtype == 2)
             {
-                path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+                    path = FileSystem.Current.AppDataDirectory + "/currentsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
+                else
+                    path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
