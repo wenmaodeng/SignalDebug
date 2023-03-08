@@ -22,7 +22,7 @@ public partial class DataDebugPage : ContentPage
     /// 当前记录的数据数量
     /// </summary>
     int datacount = 0;
-    
+
     /// <summary>
     /// 0 记录全部数据 1 记录全部信号列表数据 2 记录当前信号列表数据
     /// </summary>
@@ -48,8 +48,8 @@ public partial class DataDebugPage : ContentPage
     /// </summary>
     private DataDebugModel dataDebugModel = null;
     public DataDebugPage()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         ConnectBluetooth();
     }
     private void SaveData(string data)
@@ -99,20 +99,13 @@ public partial class DataDebugPage : ContentPage
     {
         InitCintrol();
         picker.SelectedIndex = 2;
-
-        if (DeviceInfo.Current.Platform == DevicePlatform.Android)
-            path = FileSystem.Current.AppDataDirectory + "/currentsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
-        else
-            path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
-
-
+        path = FileSystem.Current.AppDataDirectory + "/currentsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
         }
         string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
         filename = Path.Combine(path, fn);
-        
         base.OnAppearing();
     }
     private void InitCintrol()
@@ -169,7 +162,7 @@ public partial class DataDebugPage : ContentPage
         {
             if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
                 return;
-            if (tempstrs[0]!= dataDebugModel.DataInfo.FrameHead)
+            if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
                 return;
             if (IsSaveData)
             {
@@ -222,7 +215,7 @@ public partial class DataDebugPage : ContentPage
     }
     protected override void OnDisappearing()
     {
-        if(streamWriter!=null)
+        if (streamWriter != null)
         {
             streamWriter?.Close();
             streamWriter?.Dispose();
@@ -311,7 +304,7 @@ public partial class DataDebugPage : ContentPage
     {
         if (MainThread.IsMainThread)
         {
-            rec.Text =DateTime.Now.ToString("yyyyMMddHHmmss") +":"+ recdata;
+            rec.Text = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + recdata;
         }
         else
         {
@@ -337,7 +330,7 @@ public partial class DataDebugPage : ContentPage
     {
         if (recordtype == 2)
         {
-            recdata = "1,2,3,4,5,6,7,8,9";
+            recdata = "1,2,3,4,5,6,7,8,9,d,w,m";
             //string[] tempstrs = recdata.Split(',');
             //if (tempstrs.Length < 2)
             //    return;
@@ -348,7 +341,7 @@ public partial class DataDebugPage : ContentPage
             //if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
             //    return;
             //recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + GetSignals(tempstrs);
-            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + recdata;
+            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + recdata;
             SaveData(recdata);
         }
         else
@@ -378,25 +371,15 @@ public partial class DataDebugPage : ContentPage
         string temp = FileSystem.Current.AppDataDirectory;
         if (recordtype == 0)
         {
-            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
-                temp = FileSystem.Current.AppDataDirectory + "/alldatas/";
-            else
-                temp = FileSystem.Current.AppDataDirectory + "\\alldatas\\";
+            temp = FileSystem.Current.AppDataDirectory + "/alldatas/";
         }
         else if (recordtype == 1)
         {
-            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
-                temp = FileSystem.Current.AppDataDirectory + "/allsignals/";
-            else
-                temp = FileSystem.Current.AppDataDirectory + "\\allsignals\\";
-
+            temp = FileSystem.Current.AppDataDirectory + "/allsignals/";
         }
         else if (recordtype == 2)
         {
-            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
-                temp = FileSystem.Current.AppDataDirectory + "/currentsignals/";
-            else
-                temp = FileSystem.Current.AppDataDirectory + "\\currentsignals\\";
+            temp = FileSystem.Current.AppDataDirectory + "/currentsignals/";
         }
         await Navigation.PushAsync(new ShareDirectoryPage { DirectoryPath = temp });
     }
@@ -413,24 +396,18 @@ public partial class DataDebugPage : ContentPage
             recordtype = picker.SelectedIndex;
             if (recordtype == 0)
             {
-                if (DeviceInfo.Current.Platform == DevicePlatform.Android)
-                    path = FileSystem.Current.AppDataDirectory + "/alldatas/" + DateTime.Now.ToString("yyyy_MM_dd");
-                else
-                    path = FileSystem.Current.AppDataDirectory + "\\alldatas\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                path = FileSystem.Current.AppDataDirectory + "/alldatas/" + DateTime.Now.ToString("yyyy_MM_dd");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
                 string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
                 filename = Path.Combine(path, fn);
-                streamWriter= new StreamWriter(filename);
+                streamWriter = new StreamWriter(filename);
             }
             else if (recordtype == 1)
             {
-                if (DeviceInfo.Current.Platform == DevicePlatform.Android)
-                    path = FileSystem.Current.AppDataDirectory + "/allsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
-                else
-                    path = FileSystem.Current.AppDataDirectory + "\\allsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                path = FileSystem.Current.AppDataDirectory + "/allsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
@@ -441,10 +418,7 @@ public partial class DataDebugPage : ContentPage
             }
             else if (recordtype == 2)
             {
-                if (DeviceInfo.Current.Platform == DevicePlatform.Android)
-                    path = FileSystem.Current.AppDataDirectory + "/currentsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
-                else
-                    path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                path = FileSystem.Current.AppDataDirectory + "/currentsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
