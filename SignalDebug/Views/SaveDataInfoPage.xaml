@@ -62,11 +62,11 @@
                             <SwipeView Margin="10,0,10,0" HeightRequest="45">
                                 <SwipeView.LeftItems>
                                     <SwipeItems>
-                                        <SwipeItemView BackgroundColor="Green"  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.EditSignalInfoCommand}" >
-                                            <Label HorizontalTextAlignment="Center" VerticalOptions="Fill" VerticalTextAlignment="Center" TextColor="Black" BackgroundColor="Transparent"  Text="编辑"/>
+                                        <SwipeItemView Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.EditSignalInfoCommand}" >
+                                            <Button CornerRadius="5" BackgroundColor="Green" Text="编辑"/>
                                         </SwipeItemView>
-                                        <SwipeItemView BackgroundColor="Red"  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.DeleteSignalInfoCommand}">
-                                            <Label HorizontalTextAlignment="Center" VerticalOptions="Fill" VerticalTextAlignment="Center" TextColor="Black" BackgroundColor="Transparent"  Text="删除"/>
+                                        <SwipeItemView Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.DeleteSignalInfoCommand}">
+                                            <Button CornerRadius="5" BackgroundColor="Red"  Text="删除"/>
                                         </SwipeItemView>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
@@ -74,7 +74,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Margin="3" HeightRequest="30" VerticalTextAlignment="Center" Text="{Binding SignalName}"/>
+                                    <Label Margin="10,3,0,3" HeightRequest="30" VerticalTextAlignment="Center" Text="{Binding SignalName}"/>
                                 </Grid>
                             </SwipeView>
 

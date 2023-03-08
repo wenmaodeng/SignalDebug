@@ -57,6 +57,7 @@ public partial class DataDebugPage : ContentPage
     }
     protected override void OnAppearing()
     {
+        picker.SelectedIndex = 2;
         InitCintrol();
         base.OnAppearing();
     }
@@ -285,5 +286,12 @@ public partial class DataDebugPage : ContentPage
     private async void ExportData_Clicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new ShareDirectoryPage());
+    }
+
+    private void picker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        var picker = (Picker)sender;
+        if (recordtype != picker.SelectedIndex)
+            recordtype = picker.SelectedIndex;
     }
 }

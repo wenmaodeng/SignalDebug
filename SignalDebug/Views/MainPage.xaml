@@ -22,21 +22,21 @@
                             <SwipeView Margin="10,0,10,0" HeightRequest="45">
                                 <SwipeView.LeftItems>
                                     <SwipeItems>
-                                        <SwipeItemView BackgroundColor="Green"  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.EditDataInfoCommand}" >
-                                            <Label HorizontalTextAlignment="Center" VerticalOptions="Fill" VerticalTextAlignment="Center" TextColor="Black" BackgroundColor="Transparent"  Text="编辑"/>
+                                        <SwipeItemView  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.EditDataInfoCommand}" >
+                                            <Button CornerRadius="5" BackgroundColor="Green" Text="编辑"/>
                                         </SwipeItemView>
-                                        <SwipeItemView BackgroundColor="Red"  Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.DeleteDataInfoCommand}">
-                                            <Label HorizontalTextAlignment="Center" VerticalOptions="Fill" VerticalTextAlignment="Center" TextColor="Black" BackgroundColor="Transparent"  Text="删除"/>
+                                        <SwipeItemView Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.DeleteDataInfoCommand}">
+                                            <Button CornerRadius="5" BackgroundColor="Red"  Text="删除"/>
                                         </SwipeItemView>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid VerticalOptions="Center" BackgroundColor="Red">
+                                <Grid VerticalOptions="Center">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="80"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label VerticalTextAlignment="Center" TextColor="Black" Text="{Binding DataName}" FontSize="Title"/>
-                                    <Button VerticalOptions="Center" HorizontalOptions="Fill" Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="Red" FontSize="Micro" CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
+                                    <Label Margin="10,3,0,3"  HeightRequest="30" VerticalTextAlignment="Center" TextColor="Black" Text="{Binding DataName}" />
+                                    <Button VerticalOptions="Center" HorizontalOptions="Fill" Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="Green" FontSize="Small"  CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
                                 </Grid>
                             </SwipeView>
                         </DataTemplate>

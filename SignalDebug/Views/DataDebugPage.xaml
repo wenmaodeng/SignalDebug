@@ -5,24 +5,22 @@
              Title="{Binding DataInfo.DataName}" Shell.BackgroundColor="#838996" BackgroundColor="#838996">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
+            <RowDefinition  Height="80"/>
             <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label x:Name="rec" Grid.Row="0" BackgroundColor="DarkGray" TextColor="Black"  VerticalTextAlignment="Center" Margin="0" VerticalOptions="Fill" HorizontalTextAlignment="Center"/>
-        <Grid Grid.Row="1" >
+        <Label x:Name="rec"  Grid.Row="0" HeightRequest="80" BackgroundColor="Transparent" TextColor="Black"  Margin="0" Padding="0" VerticalTextAlignment="Center" VerticalOptions="Fill" HorizontalTextAlignment="Start"/>
+        <Grid Grid.Row="1" ColumnSpacing="3" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <!--<Button Grid.Column="0" x:Name="allbutton" Text="记录全部数据" BackgroundColor="Transparent" Clicked="Button_Clicked"/>
-            <Button Grid.Column="1" x:Name="allsignaldatabutton" Text="记录信号数据" BackgroundColor="Transparent" Clicked="Button_Clicked_1" />
-            <Button Grid.Column="2" x:Name="allsignaldatabutton1" Text="记录信号数据" BackgroundColor="Transparent" Clicked="Button_Clicked_1" />-->
-            <Picker BackgroundColor="Blue" HorizontalOptions="Fill" SelectedIndex="2" VerticalOptions="Center" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
+
+            <Picker x:Name="picker"  TextColor="White" HeightRequest="45"  BackgroundColor="DarkGray" HorizontalOptions="Fill" SelectedIndex="2" VerticalOptions="Fill" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" SelectedIndexChanged="picker_SelectedIndexChanged">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>记录全部数据</x:String>
@@ -31,10 +29,10 @@
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>
-            <Button x:Name="RecordData" Grid.Column="1" Text="记录" Clicked="Button_Clicked" BackgroundColor="Transparent"/>
-            <Button x:Name="ExportData" BackgroundColor="Transparent" Clicked="ExportData_Clicked" Grid.Column="2" Text="导出数据"/>
+            <Button x:Name="RecordData" CornerRadius="0" HeightRequest="45"  HorizontalOptions="Fill" Grid.Column="1" Clicked="Button_Clicked" BackgroundColor="DarkGray" Text="记录" />
+            <Button x:Name="ExportData" CornerRadius="0" HeightRequest="45"  HorizontalOptions="Fill" Grid.Column="2" Clicked="ExportData_Clicked" BackgroundColor="DarkGray" Text="导出数据"/>
+        
         </Grid>
-
 
         <Frame Grid.Row="2" Margin="3" Padding="0" BackgroundColor="Transparent">
             <VerticalStackLayout x:Name="verticalStackLayout"></VerticalStackLayout>
