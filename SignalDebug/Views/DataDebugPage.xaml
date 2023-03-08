@@ -29,7 +29,7 @@
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>
-            <Button x:Name="RecordData" CornerRadius="0" HeightRequest="45"  HorizontalOptions="Fill" Grid.Column="1" Clicked="Button_Clicked" BackgroundColor="DarkGray" Text="记录" />
+            <Button x:Name="RecordData" CornerRadius="0" HeightRequest="45"  HorizontalOptions="Fill" Grid.Column="1" Clicked="Button_Clicked" BackgroundColor="DarkGray" Text="记录【0】" />
             <Button x:Name="ExportData" CornerRadius="0" HeightRequest="45"  HorizontalOptions="Fill" Grid.Column="2" Clicked="ExportData_Clicked" BackgroundColor="DarkGray" Text="导出数据"/>
         
         </Grid>

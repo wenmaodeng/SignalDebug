@@ -4,22 +4,49 @@ using SignalDebug.ViewModels;
 using System.Diagnostics;
 using System.Text;
 using YunBang.MAUI.UI.OutDisplay;
+using static CoreFoundation.DispatchSource;
 
 namespace SignalDebug.Views;
 
 public partial class DataDebugPage : ContentPage
 {
-    string path = FileSystem.Current.AppDataDirectory + "\\record\\" + DateTime.Now.ToString("yyyy_MM_dd");
+    StreamWriter streamWriter = null;
+    /// <summary>
+    /// 文件目录
+    /// </summary>
+    string path = string.Empty;
+    /// <summary>
+    /// 文件名称（含路径）
+    /// </summary>
     string filename = string.Empty;
+    /// <summary>
+    /// 当前记录的数据数量
+    /// </summary>
     int datacount = 0;
-    GattCharacteristic gattCharacteristic = null;
+    
     /// <summary>
     /// 0 记录全部数据 1 记录全部信号列表数据 2 记录当前信号列表数据
     /// </summary>
     int recordtype = 2;
+    /// <summary>
+    /// 是否记录数据
+    /// </summary>
     static bool IsSaveData = false;
+    /// <summary>
+    /// 连接的蓝牙设备信息
+    /// </summary>
     BluetoothDevice device = null;
+    /// <summary>
+    /// 蓝牙Notify特征
+    /// </summary>
+    GattCharacteristic gattCharacteristic = null;
+    /// <summary>
+    /// 信号控件集合
+    /// </summary>
     private static List<Element> contentViews = new List<Element>();
+    /// <summary>
+    /// 页面绑定的数据源信息
+    /// </summary>
     private static DataDebugModel dataDebugModel = null;
     public DataDebugPage()
 	{
@@ -29,35 +56,49 @@ public partial class DataDebugPage : ContentPage
     private void SaveData(string data)
     {
         if (string.IsNullOrEmpty(path))
-            return;
-        if (!Directory.Exists(path))
         {
-            Directory.CreateDirectory(path);
+            return;
         }
+        
         if (string.IsNullOrEmpty(filename))
         {
-            string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
-            filename = Path.Combine(path, fn);
+            return;
         }
-        data = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + data;
 
-        using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename, true))
+        if(recordtype==2)
         {
-            file.WriteLine(data);
-            datacount++;
-            if (MainThread.IsMainThread)
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename, true))
             {
-                RecordData.Text = $"已记录数量【{datacount}】";
+                file.WriteLine(data);
             }
-            else
+        }
+        else
+        {
+            if (streamWriter!=null)
             {
-                MainThread.BeginInvokeOnMainThread(() => { RecordData.Text = $"已记录数量【{datacount}】"; });
+                streamWriter.WriteLine(data);
             }
+        }
+        datacount++;
+        if (MainThread.IsMainThread)
+        {
+            RecordData.Text = $"记录【{datacount}】";
+        }
+        else
+        {
+            MainThread.BeginInvokeOnMainThread(() => { RecordData.Text = $"记录【{datacount}】"; });
         }
     }
     protected override void OnAppearing()
     {
         picker.SelectedIndex = 2;
+        path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
+        filename = Path.Combine(path, fn);
         InitCintrol();
         base.OnAppearing();
     }
@@ -101,34 +142,35 @@ public partial class DataDebugPage : ContentPage
         }
     }
 
-        //}
-        /// <summary>
-        /// 处理数据
-        /// </summary>
-        /// <param name="data"></param>
-        private void HandleData(string data)
+    //}
+    /// <summary>
+    /// 处理数据
+    /// </summary>
+    /// <param name="data"></param>
+    private void HandleData(string data)
     {
         string[] tempstrs = data.Split(',');
-        if (recordtype == 0)
-        {
-            if (IsSaveData)
-            {
-
-            }
-        }
-        else if (recordtype == 1)
-        {
-            if (IsSaveData)
-            {
-
-            }
-        }
-        else if (recordtype == 2)
-        {
-
-        }
+        if (tempstrs.Length < 2)
+            return;
         if (dataDebugModel != null)
         {
+            if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
+                return;
+            if (tempstrs[0]!= dataDebugModel.DataInfo.FrameHead)
+                return;
+            if (IsSaveData)
+            {
+                if (recordtype == 0)
+                {
+                    data = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + data;
+                    SaveData(data);
+                }
+                else if (recordtype == 1)
+                {
+                    data = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + GetSignals(tempstrs);
+                    SaveData(data);
+                }
+            }
             dataDebugModel.SignalInfos.ForEach(s =>
             {
                 string value = tempstrs[s.SignalBit];
@@ -167,6 +209,12 @@ public partial class DataDebugPage : ContentPage
     }
     protected override void OnDisappearing()
     {
+        if(streamWriter!=null)
+        {
+            streamWriter?.Close();
+            streamWriter?.Dispose();
+            streamWriter = null;
+        }
         if (gattCharacteristic != null)
         {
             gattCharacteristic.CharacteristicValueChanged -= Chars_CharacteristicValueChanged;
@@ -257,12 +305,35 @@ public partial class DataDebugPage : ContentPage
             MainThread.BeginInvokeOnMainThread(DisplayData);
         }
     }
+    /// <summary>
+    /// 拼接配置的信号字符串
+    /// </summary>
+    /// <param name="recdata"></param>
+    /// <returns></returns>
+    private string GetSignals(string[] recdata)
+    {
+        string temp = string.Empty;
+        dataDebugModel.SignalInfos.ForEach(info =>
+        {
 
+            temp += $"{info.SignalName}:{recdata[info.SignalBit]},";
+        });
+        return temp;
+    }
     private void Button_Clicked(object sender, EventArgs e)
     {
-        if(recordtype==2)
+        if (recordtype == 2)
         {
-            datacount++;
+            string[] tempstrs = recdata.Split(',');
+            if (tempstrs.Length < 2)
+                return;
+            if (dataDebugModel == null)
+                return;
+            if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
+                return;
+            if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
+                return;
+            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + GetSignals(tempstrs);
             SaveData(recdata);
         }
         else
@@ -270,28 +341,83 @@ public partial class DataDebugPage : ContentPage
             IsSaveData = !IsSaveData;
             if (!IsSaveData)
             {
-                datacount = 0;
-                filename = string.Empty;
+                picker.IsEnabled = true;
+                streamWriter?.Close();
+                streamWriter?.Dispose();
+                streamWriter = null;
             }
-
+            else
+            {
+                picker.IsEnabled = false;
+            }
             Button button = sender as Button;
             if (button != null)
             {
                 button.BackgroundColor = IsSaveData ? Colors.Green : Colors.Transparent;
             }
         }
-        
     }
 
     private async void ExportData_Clicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new ShareDirectoryPage());
+        string temp = FileSystem.Current.AppDataDirectory;
+        if (recordtype == 0)
+        {
+            temp = FileSystem.Current.AppDataDirectory + "\\alldatas\\";
+        }
+        else if (recordtype == 1)
+        {
+            temp = FileSystem.Current.AppDataDirectory + "\\allsignals\\";
+        }
+        else if (recordtype == 2)
+        {
+            temp = FileSystem.Current.AppDataDirectory + "\\currentsignals\\";
+        }
+        await Navigation.PushAsync(new ShareDirectoryPage { DirectoryPath = temp });
     }
 
     private void picker_SelectedIndexChanged(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
         if (recordtype != picker.SelectedIndex)
+        {
+            datacount = 0;
+            streamWriter?.Close();
+            streamWriter?.Dispose();
+            streamWriter = null;
             recordtype = picker.SelectedIndex;
+            if (recordtype == 0)
+            {
+                path = FileSystem.Current.AppDataDirectory + "\\alldatas\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
+                filename = Path.Combine(path, fn);
+                streamWriter= new StreamWriter(filename);
+            }
+            else if (recordtype == 1)
+            {
+                path = FileSystem.Current.AppDataDirectory + "\\allsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
+                filename = Path.Combine(path, fn);
+                streamWriter = new StreamWriter(filename);
+            }
+            else if (recordtype == 2)
+            {
+                path = FileSystem.Current.AppDataDirectory + "\\currentsignals\\" + DateTime.Now.ToString("yyyy_MM_dd");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
+                filename = Path.Combine(path, fn);
+            }
+        }
     }
 }

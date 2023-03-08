@@ -2,26 +2,31 @@ namespace SignalDebug.Views;
 
 public partial class ShareDirectoryPage : ContentPage
 {
-	public ShareDirectoryPage()
+    public string DirectoryPath=string.Empty;
+
+    public ShareDirectoryPage()
 	{
 		InitializeComponent();
 	}
     protected override void OnAppearing()
     {
-        var ss = Directory.GetDirectories(FileSystem.Current.AppDataDirectory + "\\record");
+        if (string.IsNullOrEmpty(DirectoryPath))
+            return;
+        if (!Directory.Exists(DirectoryPath))
+        {
+            Directory.CreateDirectory(DirectoryPath);
+        }
+        var directorys = Directory.GetDirectories(DirectoryPath);
 
-        foreach (var d in ss)
+        foreach (var d in directorys)
         {
 
             Button button = new Button();
-            button.Text = d.Replace(FileSystem.Current.AppDataDirectory + "\\record", string.Empty);
+            button.Text = d.Replace(FileSystem.Current.AppDataDirectory, string.Empty);
             button.ClassId = d;
             button.Clicked += Button_Clicked;
             verticalStackLayout.Children.Add(button);
         }
-
-
-
         base.OnAppearing();
     }
 
