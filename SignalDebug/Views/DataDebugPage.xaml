@@ -5,16 +5,16 @@
              Title="{Binding DataInfo.DataName}" Shell.BackgroundColor="#838996" BackgroundColor="#838996">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="80"/>
             <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label x:Name="rec" Grid.Row="0" BackgroundColor="Transparent" TextColor="Black"  VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+        <Label x:Name="rec" Grid.Row="0" BackgroundColor="DarkGray" TextColor="Black"  VerticalTextAlignment="Center" Margin="0" VerticalOptions="Fill" HorizontalTextAlignment="Center"/>
         <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -22,7 +22,7 @@
             <!--<Button Grid.Column="0" x:Name="allbutton" Text="记录全部数据" BackgroundColor="Transparent" Clicked="Button_Clicked"/>
             <Button Grid.Column="1" x:Name="allsignaldatabutton" Text="记录信号数据" BackgroundColor="Transparent" Clicked="Button_Clicked_1" />
             <Button Grid.Column="2" x:Name="allsignaldatabutton1" Text="记录信号数据" BackgroundColor="Transparent" Clicked="Button_Clicked_1" />-->
-            <Picker HorizontalOptions="Fill" VerticalOptions="Center" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
+            <Picker BackgroundColor="Blue" HorizontalOptions="Fill" SelectedIndex="2" VerticalOptions="Center" VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>记录全部数据</x:String>

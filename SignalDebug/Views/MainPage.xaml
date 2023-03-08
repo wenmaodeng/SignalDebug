@@ -16,7 +16,7 @@
                 <Label Grid.Row="0" FontSize="Title" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="Center" VerticalTextAlignment="Center" Text="数据源列表"/>
                 <Button Grid.Row="0" BorderColor="Transparent"  FontSize="Large"  BackgroundColor="Transparent" HorizontalOptions="End"  VerticalOptions="Center"  Text="+" Command="{Binding AddDataInfoCommand}"/>
                 <BoxView Grid.Row="1"  Color="White" CornerRadius="1" Margin="3,0,3,0"/>
-                <CollectionView Grid.Row="2" ItemsSource="{Binding DataInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
+                <CollectionView x:Name="collectionView" Grid.Row="2" ItemsSource="{Binding DataInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView Margin="10,0,10,0" HeightRequest="45">
