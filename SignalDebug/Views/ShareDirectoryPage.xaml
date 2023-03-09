@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SignalDebug.Views.ShareDirectoryPage"
-             Title="文件目录"  BackgroundColor="#838996" >
-    <VerticalStackLayout x:Name="verticalStackLayout">
+             Title="文件目录"  BackgroundColor="#838996" Shell.BackgroundColor="#838996" >
+    <VerticalStackLayout x:Name="verticalStackLayout" BackgroundColor="Transparent">
 
     </VerticalStackLayout>
 </ContentPage>

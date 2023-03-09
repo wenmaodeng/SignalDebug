@@ -56,10 +56,10 @@
                 <Label Grid.Row="0" FontSize="Title" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="Center" VerticalTextAlignment="Center" Text="信号列表"/>
                 <Button Grid.Row="0" BorderColor="Transparent"  FontSize="Large"  BackgroundColor="Transparent" HorizontalOptions="End"  VerticalOptions="Center"  Text="+" Command="{Binding AddSignalInfoCommand}"/>
                 <BoxView Grid.Row="1" Color="White" CornerRadius="1" Margin="3,0,3,0"/>
-                <CollectionView x:Name="collectionView" Grid.Row="2"  ItemsSource="{Binding SignalInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
+                <CollectionView Margin="0,3,0,0" x:Name="collectionView" Grid.Row="2"  ItemsSource="{Binding SignalInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <SwipeView Margin="10,0,10,0" HeightRequest="45">
+                            <SwipeView HeightRequest="45">
                                 <SwipeView.LeftItems>
                                     <SwipeItems>
                                         <SwipeItemView Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.EditSignalInfoCommand}" >
@@ -70,12 +70,14 @@
                                         </SwipeItemView>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid VerticalOptions="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Margin="10,3,0,3" HeightRequest="30" VerticalTextAlignment="Center" Text="{Binding SignalName}"/>
-                                </Grid>
+                                <Frame CornerRadius="5" Margin="0" BackgroundColor="Transparent">
+                                    <Grid VerticalOptions="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Margin="10,3,0,3" HeightRequest="30" VerticalTextAlignment="Center" FontSize="Large" Text="{Binding SignalName}"/>
+                                    </Grid>
+                                </Frame>
                             </SwipeView>
 
                         </DataTemplate>
