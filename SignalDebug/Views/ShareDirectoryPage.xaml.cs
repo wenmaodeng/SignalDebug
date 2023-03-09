@@ -1,8 +1,10 @@
+using SignalDebug.ViewModels;
+
 namespace SignalDebug.Views;
 
 public partial class ShareDirectoryPage : ContentPage
 {
-    public string DirectoryPath=string.Empty;
+    ShareDirectoryModel shareDirectoryModel = null;
 
     public ShareDirectoryPage()
 	{
@@ -10,39 +12,63 @@ public partial class ShareDirectoryPage : ContentPage
 	}
     protected override void OnAppearing()
     {
-        verticalStackLayout.Children.Clear();
-        if (string.IsNullOrEmpty(DirectoryPath))
-            return;
-        if (!Directory.Exists(DirectoryPath))
+        shareDirectoryModel = this.BindingContext as ShareDirectoryModel;
+        MessagingCenter.Subscribe<ShareDirectoryModel>(this, "OpenDirectory", async (sender) =>
         {
-            Directory.CreateDirectory(DirectoryPath);
-        }
-        var directorys = Directory.GetDirectories(DirectoryPath);
+            if (shareDirectoryModel==null|| shareDirectoryModel.CurrentDirectoryInfo==null)
+            {
+                await DisplayAlert("提示", "请选择文件夹!", "确定");
+            }
+            else
+            {
+                ShareFilePageModel shareFilePageModel = new ShareFilePageModel();
+                var files = Directory.GetFiles(shareDirectoryModel.CurrentDirectoryInfo.FullDirectory);
+                files?.ToList().ForEach(f =>
+                {
+                    SignalDebug.Models.FileInfo fileInfo = new SignalDebug.Models.FileInfo();
+                    fileInfo.FileName = System.IO.Path.GetFileName(f);
+                    fileInfo.FullPath = f;
+                    shareFilePageModel.FileInfos.Add(fileInfo);
+                });
 
-        foreach (var d in directorys)
+                await Navigation.PushAsync(new ShareFilePage { BindingContext = shareFilePageModel });
+            }
+        });
+        MessagingCenter.Subscribe<ShareDirectoryModel>(this, "DeleteDirectory", async (sender) =>
         {
-
-            Button button = new Button();
-            button.Text = d.Replace(FileSystem.Current.AppDataDirectory, string.Empty);
-            button.ClassId = d;
-            button.BackgroundColor = Colors.Gray;
-            button.CornerRadius = 0;
-            button.Clicked += Button_Clicked;
-            verticalStackLayout.Children.Add(button);
-        }
+            if (shareDirectoryModel == null || shareDirectoryModel.CurrentDirectoryInfo == null)
+            {
+                await DisplayAlert("提示", "请选择文件夹!", "确定");
+            }
+            else
+            {
+                bool rel = await DisplayAlert("提示", $"确认删除文件夹:{shareDirectoryModel.CurrentDirectoryInfo.Directory}吗?", "确认", "取消");
+                if (rel)
+                {
+                    if (Directory.Exists(shareDirectoryModel.CurrentDirectoryInfo.FullDirectory))
+                        Directory.Delete(shareDirectoryModel.CurrentDirectoryInfo.FullDirectory);
+                    shareDirectoryModel.DirectoryInfos.Remove(shareDirectoryModel.CurrentDirectoryInfo);
+                    List<SignalDebug.Models.DirectoryInfo> temps = new List<Models.DirectoryInfo>();
+                    shareDirectoryModel.DirectoryInfos.ForEach(d =>
+                    {
+                        temps.Add(d);
+                    });
+                    shareDirectoryModel.DirectoryInfos = temps;
+                    shareDirectoryModel.CurrentDirectoryInfo = null;
+                }
+            }
+        });
         base.OnAppearing();
     }
 
-    private async void Button_Clicked(object sender, EventArgs e)
+    private void collectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        Button button = (Button)sender;
-        string path = button.ClassId;
-        await Navigation.PushAsync(new ShareFilePage { Path = path });
+        shareDirectoryModel.CurrentDirectoryInfo = e.CurrentSelection[0] as SignalDebug.Models.DirectoryInfo;
     }
-
-    public class DirectoryInfo
+    protected override void OnDisappearing()
     {
-        public string DirectoryName { get; set; }
-        public string Path { get; set; }
+        MessagingCenter.Unsubscribe<ShareDirectoryModel>(this, "OpenDirectory");
+        MessagingCenter.Unsubscribe<ShareDirectoryModel>(this, "DeleteDirectory");
+        base.OnDisappearing();
     }
 }

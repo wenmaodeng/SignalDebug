@@ -392,7 +392,16 @@ public partial class DataDebugPage : ContentPage
         {
             temp = FileSystem.Current.AppDataDirectory + "/currentsignals/";
         }
-        await Navigation.PushAsync(new ShareDirectoryPage { DirectoryPath = temp });
+        var directorys = Directory.GetDirectories(temp);
+        ShareDirectoryModel shareDirectoryModel = new ShareDirectoryModel();
+        directorys?.ToList().ForEach(d =>
+        {
+            SignalDebug.Models.DirectoryInfo directoryInfo = new SignalDebug.Models.DirectoryInfo();
+            directoryInfo.Directory= d.Replace(temp, string.Empty);
+            directoryInfo.FullDirectory = d;
+            shareDirectoryModel.DirectoryInfos.Add(directoryInfo);
+        });
+        await Navigation.PushAsync(new ShareDirectoryPage { BindingContext = shareDirectoryModel });
     }
 
     private void picker_SelectedIndexChanged(object sender, EventArgs e)

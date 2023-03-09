@@ -3,7 +3,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SignalDebug.Views.ShareDirectoryPage"
              Title="文件目录"  BackgroundColor="#838996" Shell.BackgroundColor="#838996" >
-    <VerticalStackLayout x:Name="verticalStackLayout" BackgroundColor="Transparent">
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-    </VerticalStackLayout>
+
+        <CollectionView Margin="0,3,0,0" x:Name="collectionView" ItemsSource="{Binding DirectoryInfos}" SelectionMode="Single"  SelectionChanged="collectionView_SelectionChanged">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView HeightRequest="45">
+                        <SwipeView.LeftItems>
+                            <SwipeItems>
+                                <SwipeItemView Margin="0" Padding="0"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.DeleteDirectoryCommand}">
+                                    <Button CornerRadius="5" BackgroundColor="Red"  Text="删除"/>
+                                </SwipeItemView>
+                            </SwipeItems>
+                        </SwipeView.LeftItems>
+                        <Frame CornerRadius="5" Margin="0" BackgroundColor="Transparent">
+                            <Grid VerticalOptions="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Margin="10,3,0,3"  HeightRequest="30" VerticalTextAlignment="Center" FontSize="Large" TextColor="Black" Text="{Binding Directory}" />
+                                <Button Margin="0" VerticalOptions="Center" HorizontalOptions="Fill" Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="打开文件夹" TextColor="White" FontSize="Small"  Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.OpenDirectoryCommand}"/>
+                            </Grid>
+                        </Frame>
+                    </SwipeView>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+
+
+
+        <!--<VerticalStackLayout x:Name="verticalStackLayout" BackgroundColor="Transparent">
+
+        </VerticalStackLayout>-->
+    </Grid>
 </ContentPage>
