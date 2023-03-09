@@ -25,6 +25,8 @@ public partial class ShareDirectoryPage : ContentPage
             Button button = new Button();
             button.Text = d.Replace(FileSystem.Current.AppDataDirectory, string.Empty);
             button.ClassId = d;
+            button.BackgroundColor = Colors.Gray;
+            button.CornerRadius = 0;
             button.Clicked += Button_Clicked;
             verticalStackLayout.Children.Add(button);
         }

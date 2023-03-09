@@ -118,31 +118,31 @@ public partial class DataDebugPage : ContentPage
         {
             for (int i = 0; i < dataDebugModel.SignalInfos.Count; i++)
             {
-                //if (temp.SignalInfos[i].Enabled)
+                //if (dataDebugModel.SignalInfos[i].Enabled)
                 //{
-                switch (dataDebugModel.SignalInfos[i].DataType)
-                {
-                    case Models.DataType.BoolSignal:
-                        break;
-                    case Models.DataType.FloatSignal:
-                        TextDisplay textShowFloatSignal = new TextDisplay();
-                        textShowFloatSignal.LableText = dataDebugModel.SignalInfos[i].SignalName;
-                        textShowFloatSignal.Describe = dataDebugModel.SignalInfos[i].Unit;
-                        textShowFloatSignal.ClassId = dataDebugModel.SignalInfos[i].SignalId;
-                        contentViews.Add(textShowFloatSignal);
-                        verticalStackLayout.Add(textShowFloatSignal);
-                        break;
-                    case Models.DataType.IntSignal:
-                        TextDisplay textShowIntSignal = new TextDisplay();
-                        textShowIntSignal.LableText = dataDebugModel.SignalInfos[i].SignalName;
-                        textShowIntSignal.Describe = dataDebugModel.SignalInfos[i].Unit;
-                        textShowIntSignal.ClassId = dataDebugModel.SignalInfos[i].SignalId;
-                        contentViews.Add(textShowIntSignal);
-                        verticalStackLayout.Add(textShowIntSignal);
-                        break;
-                    default:
-                        break;
-                }
+                    switch (dataDebugModel.SignalInfos[i].DataType)
+                    {
+                        case Models.DataType.BoolSignal:
+                            break;
+                        case Models.DataType.FloatSignal:
+                            TextDisplay textShowFloatSignal = new TextDisplay();
+                            textShowFloatSignal.LableText = dataDebugModel.SignalInfos[i].SignalName;
+                            textShowFloatSignal.Describe = dataDebugModel.SignalInfos[i].Unit;
+                            textShowFloatSignal.ClassId = dataDebugModel.SignalInfos[i].SignalId;
+                            contentViews.Add(textShowFloatSignal);
+                            verticalStackLayout.Add(textShowFloatSignal);
+                            break;
+                        case Models.DataType.IntSignal:
+                            TextDisplay textShowIntSignal = new TextDisplay();
+                            textShowIntSignal.LableText = dataDebugModel.SignalInfos[i].SignalName;
+                            textShowIntSignal.Describe = dataDebugModel.SignalInfos[i].Unit;
+                            textShowIntSignal.ClassId = dataDebugModel.SignalInfos[i].SignalId;
+                            contentViews.Add(textShowIntSignal);
+                            verticalStackLayout.Add(textShowIntSignal);
+                            break;
+                        default:
+                            break;
+                    }
                 //}
             }
         }
@@ -155,62 +155,75 @@ public partial class DataDebugPage : ContentPage
     /// <param name="data"></param>
     private void HandleData(string data)
     {
-        string[] tempstrs = data.Split(',');
-        if (tempstrs.Length < 2)
-            return;
-        if (dataDebugModel != null)
+        try
         {
-            if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
+            string[] tempstrs = data.Split(',');
+            if (tempstrs.Length < 2)
                 return;
-            if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
-                return;
-            if (IsSaveData)
+            if (dataDebugModel != null)
             {
-                if (recordtype == 0)
+                if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
+                    return;
+                if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
+                    return;
+                if (IsSaveData)
                 {
-                    data = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + data;
-                    SaveData(data);
+                    if (recordtype == 0)
+                    {
+                        data = DateTime.Now.ToString("yyyyMMddHHmmss") + $"¡¾{datacount + 1}¡¿:" + data;
+                        SaveData(data);
+                    }
+                    else if (recordtype == 1)
+                    {
+                        data = DateTime.Now.ToString("yyyyMMddHHmmss") + $"¡¾{datacount + 1}¡¿:" + GetSignals(tempstrs);
+                        SaveData(data);
+                    }
                 }
-                else if (recordtype == 1)
+                dataDebugModel.SignalInfos.ForEach(s =>
                 {
-                    data = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + GetSignals(tempstrs);
-                    SaveData(data);
-                }
+                    string value = tempstrs[s.SignalBit];
+                    var element = contentViews.FirstOrDefault(x => x.ClassId == s.SignalId);
+                    switch (s.DataType)
+                    {
+                        case Models.DataType.BoolSignal:
+                            break;
+                        case Models.DataType.FloatSignal:
+                            TextDisplay textShowFloatSignal = element as TextDisplay;
+                            if (textShowFloatSignal != null)
+                            {
+                                if (MainThread.IsMainThread)
+                                {
+                                    textShowFloatSignal.TextValue = value;
+                                }
+                                else
+                                {
+                                    MainThread.BeginInvokeOnMainThread(() => { textShowFloatSignal.TextValue = value; });
+                                }
+                            }
+                            break;
+                        case Models.DataType.IntSignal:
+                            TextDisplay textShowFloatIntSignal = element as TextDisplay;
+                            if (textShowFloatIntSignal != null)
+                            {
+                                if (MainThread.IsMainThread)
+                                {
+                                    textShowFloatIntSignal.TextValue = value;
+                                }
+                                else
+                                {
+                                    MainThread.BeginInvokeOnMainThread(() => { textShowFloatIntSignal.TextValue = value; });
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                });
             }
-            dataDebugModel.SignalInfos.ForEach(s =>
-            {
-                string value = tempstrs[s.SignalBit];
-                var element = contentViews.FirstOrDefault(x => x.ClassId == s.SignalId);
-                switch (s.DataType)
-                {
-                    case Models.DataType.BoolSignal:
-                        break;
-                    case Models.DataType.FloatSignal:
-                        TextDisplay textShowFloatSignal = element as TextDisplay;
-                        if (MainThread.IsMainThread)
-                        {
-                            textShowFloatSignal.TextValue = value;
-                        }
-                        else
-                        {
-                            MainThread.BeginInvokeOnMainThread(() => { textShowFloatSignal.TextValue = value; });
-                        }
-                        break;
-                    case Models.DataType.IntSignal:
-                        TextDisplay textShowFloatIntSignal = element as TextDisplay;
-                        if (MainThread.IsMainThread)
-                        {
-                            textShowFloatIntSignal.TextValue = value;
-                        }
-                        else
-                        {
-                            MainThread.BeginInvokeOnMainThread(() => { textShowFloatIntSignal.TextValue = value; });
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            });
+        }
+        catch
+        {
+
         }
     }
     protected override void OnDisappearing()
@@ -330,18 +343,16 @@ public partial class DataDebugPage : ContentPage
     {
         if (recordtype == 2)
         {
-            recdata = "1,2,3,4,5,6,7,8,9,d,w,m";
-            //string[] tempstrs = recdata.Split(',');
-            //if (tempstrs.Length < 2)
-            //    return;
-            //if (dataDebugModel == null)
-            //    return;
-            //if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
-            //    return;
-            //if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
-            //    return;
-            //recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + GetSignals(tempstrs);
-            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + ":" + recdata;
+            string[] tempstrs = recdata.Split(',');
+            if (tempstrs.Length < 2)
+                return;
+            if (dataDebugModel == null)
+                return;
+            if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
+                return;
+            if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
+                return;
+            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"¡¾{datacount + 1}¡¿:" + GetSignals(tempstrs);
             SaveData(recdata);
         }
         else

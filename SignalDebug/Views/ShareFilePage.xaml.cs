@@ -15,6 +15,8 @@ public partial class ShareFilePage : ContentPage
         {
             Button button = new Button();
             button.ClassId = file;
+            button.BackgroundColor = Colors.Gray;
+            button.CornerRadius = 0;
             button.Text = System.IO.Path.GetFileName(file);
             button.Clicked += Button_Clicked;
             verticalStackLayout.Children.Add(button);
