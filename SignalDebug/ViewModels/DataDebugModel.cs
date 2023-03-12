@@ -12,6 +12,12 @@ namespace SignalDebug.ViewModels
 {
     public class DataDebugModel: ObservableObject
     {
+        int recordtype = 1;
+        public int RecoredType
+        {
+            set { SetProperty(ref recordtype, value); }
+            get { return recordtype; }
+        }
         DataInfo datainfo = new DataInfo();
         public DataInfo DataInfo
         {

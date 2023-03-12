@@ -9,11 +9,10 @@ namespace SignalDebug.Views;
 
 public partial class DataDebugPage : ContentPage
 {
-    StreamWriter streamWriter = null;
     /// <summary>
     /// 文件目录
     /// </summary>
-    string path = string.Empty;
+    string path = FileSystem.Current.AppDataDirectory + "/datas/" + DateTime.Now.ToString("yyyy_MM_dd");
     /// <summary>
     /// 文件名称（含路径）
     /// </summary>
@@ -22,15 +21,6 @@ public partial class DataDebugPage : ContentPage
     /// 当前记录的数据数量
     /// </summary>
     int datacount = 0;
-
-    /// <summary>
-    /// 0 记录全部数据 1 记录全部信号列表数据 2 记录当前信号列表数据
-    /// </summary>
-    int recordtype = 2;
-    /// <summary>
-    /// 是否记录数据
-    /// </summary>
-    bool IsSaveData = false;
     /// <summary>
     /// 连接的蓝牙设备信息
     /// </summary>
@@ -60,25 +50,13 @@ public partial class DataDebugPage : ContentPage
             {
                 return;
             }
-
             if (string.IsNullOrEmpty(filename))
             {
                 return;
             }
-
-            if (recordtype == 2)
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename, true))
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(filename, true))
-                {
-                    file.WriteLine(data);
-                }
-            }
-            else
-            {
-                if (streamWriter != null)
-                {
-                    streamWriter.WriteLine(data);
-                }
+                file.WriteLine(data);
             }
             datacount++;
             if (MainThread.IsMainThread)
@@ -98,8 +76,6 @@ public partial class DataDebugPage : ContentPage
     protected override void OnAppearing()
     {
         InitCintrol();
-        picker.SelectedIndex = 2;
-        path = FileSystem.Current.AppDataDirectory + "/currentsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
@@ -120,29 +96,29 @@ public partial class DataDebugPage : ContentPage
             {
                 //if (dataDebugModel.SignalInfos[i].Enabled)
                 //{
-                    switch (dataDebugModel.SignalInfos[i].DataType)
-                    {
-                        case Models.DataType.BoolSignal:
-                            break;
-                        case Models.DataType.FloatSignal:
-                            TextDisplay textShowFloatSignal = new TextDisplay();
-                            textShowFloatSignal.LableText = dataDebugModel.SignalInfos[i].SignalName;
-                            textShowFloatSignal.Describe = dataDebugModel.SignalInfos[i].Unit;
-                            textShowFloatSignal.ClassId = dataDebugModel.SignalInfos[i].SignalId;
-                            contentViews.Add(textShowFloatSignal);
-                            verticalStackLayout.Add(textShowFloatSignal);
-                            break;
-                        case Models.DataType.IntSignal:
-                            TextDisplay textShowIntSignal = new TextDisplay();
-                            textShowIntSignal.LableText = dataDebugModel.SignalInfos[i].SignalName;
-                            textShowIntSignal.Describe = dataDebugModel.SignalInfos[i].Unit;
-                            textShowIntSignal.ClassId = dataDebugModel.SignalInfos[i].SignalId;
-                            contentViews.Add(textShowIntSignal);
-                            verticalStackLayout.Add(textShowIntSignal);
-                            break;
-                        default:
-                            break;
-                    }
+                switch (dataDebugModel.SignalInfos[i].DataType)
+                {
+                    case Models.DataType.BoolSignal:
+                        break;
+                    case Models.DataType.FloatSignal:
+                        TextDisplay textShowFloatSignal = new TextDisplay();
+                        textShowFloatSignal.LableText = dataDebugModel.SignalInfos[i].SignalName;
+                        textShowFloatSignal.Describe = dataDebugModel.SignalInfos[i].Unit;
+                        textShowFloatSignal.ClassId = dataDebugModel.SignalInfos[i].SignalId;
+                        contentViews.Add(textShowFloatSignal);
+                        verticalStackLayout.Add(textShowFloatSignal);
+                        break;
+                    case Models.DataType.IntSignal:
+                        TextDisplay textShowIntSignal = new TextDisplay();
+                        textShowIntSignal.LableText = dataDebugModel.SignalInfos[i].SignalName;
+                        textShowIntSignal.Describe = dataDebugModel.SignalInfos[i].Unit;
+                        textShowIntSignal.ClassId = dataDebugModel.SignalInfos[i].SignalId;
+                        contentViews.Add(textShowIntSignal);
+                        verticalStackLayout.Add(textShowIntSignal);
+                        break;
+                    default:
+                        break;
+                }
                 //}
             }
         }
@@ -166,19 +142,6 @@ public partial class DataDebugPage : ContentPage
                     return;
                 if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
                     return;
-                if (IsSaveData)
-                {
-                    if (recordtype == 0)
-                    {
-                        data = DateTime.Now.ToString("yyyyMMddHHmmss") + $"【{datacount + 1}】:" + data;
-                        SaveData(data);
-                    }
-                    else if (recordtype == 1)
-                    {
-                        data = DateTime.Now.ToString("yyyyMMddHHmmss") + $"【{datacount + 1}】:" + GetSignals(tempstrs);
-                        SaveData(data);
-                    }
-                }
                 dataDebugModel.SignalInfos.ForEach(s =>
                 {
                     string value = tempstrs[s.SignalBit];
@@ -228,12 +191,6 @@ public partial class DataDebugPage : ContentPage
     }
     protected override void OnDisappearing()
     {
-        if (streamWriter != null)
-        {
-            streamWriter?.Close();
-            streamWriter?.Dispose();
-            streamWriter = null;
-        }
         if (gattCharacteristic != null)
         {
             gattCharacteristic.CharacteristicValueChanged -= Chars_CharacteristicValueChanged;
@@ -337,114 +294,62 @@ public partial class DataDebugPage : ContentPage
 
             temp += $"{info.SignalName}:{recdata[info.SignalBit]},";
         });
+        if (!string.IsNullOrEmpty(temp))
+        {
+            temp = temp.TrimEnd(',');
+        }
         return temp;
     }
     private void Button_Clicked(object sender, EventArgs e)
     {
-        if (recordtype == 2)
+        recdata = "yuyuyuy";
+        recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"【{datacount + 1}】:" + recdata;
+        SaveData(recdata);
+        string[] tempstrs = recdata.Split(',');
+        if (tempstrs.Length < 2)
+            return;
+        if (dataDebugModel == null)
+            return;
+        if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
+            return;
+        if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
+            return;
+        if (dataDebugModel.RecoredType == 1)
         {
-            string[] tempstrs = recdata.Split(',');
-            if (tempstrs.Length < 2)
-                return;
-            if (dataDebugModel == null)
-                return;
-            if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
-                return;
-            if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
-                return;
             recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"【{datacount + 1}】:" + GetSignals(tempstrs);
-            SaveData(recdata);
         }
         else
         {
-            IsSaveData = !IsSaveData;
-            if (!IsSaveData)
-            {
-                picker.IsEnabled = true;
-                streamWriter?.Close();
-                streamWriter?.Dispose();
-                streamWriter = null;
-            }
-            else
-            {
-                picker.IsEnabled = false;
-            }
-            Button button = sender as Button;
-            if (button != null)
-            {
-                button.BackgroundColor = IsSaveData ? Colors.Green : Colors.Transparent;
-            }
+            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"【{datacount + 1}】:" + recdata;
         }
+        SaveData(recdata);
     }
 
     private async void ExportData_Clicked(object sender, EventArgs e)
     {
-        string temp = FileSystem.Current.AppDataDirectory;
-        if (recordtype == 0)
-        {
-            temp = FileSystem.Current.AppDataDirectory + "/alldatas/";
-        }
-        else if (recordtype == 1)
-        {
-            temp = FileSystem.Current.AppDataDirectory + "/allsignals/";
-        }
-        else if (recordtype == 2)
-        {
-            temp = FileSystem.Current.AppDataDirectory + "/currentsignals/";
-        }
-        var directorys = Directory.GetDirectories(temp);
+        var directorys = Directory.GetDirectories(FileSystem.Current.AppDataDirectory + "/datas/");
         ShareDirectoryModel shareDirectoryModel = new ShareDirectoryModel();
         directorys?.ToList().ForEach(d =>
         {
             SignalDebug.Models.DirectoryInfo directoryInfo = new SignalDebug.Models.DirectoryInfo();
-            directoryInfo.Directory= d.Replace(temp, string.Empty);
+            directoryInfo.Directory = d.Replace(path, string.Empty);
             directoryInfo.FullDirectory = d;
             shareDirectoryModel.DirectoryInfos.Add(directoryInfo);
         });
         await Navigation.PushAsync(new ShareDirectoryPage { BindingContext = shareDirectoryModel });
     }
 
-    private void picker_SelectedIndexChanged(object sender, EventArgs e)
+    private void RadioButton_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
-        var picker = (Picker)sender;
-        if (recordtype != picker.SelectedIndex)
+        if (dataDebugModel != null)
         {
-            datacount = 0;
-            streamWriter?.Close();
-            streamWriter?.Dispose();
-            streamWriter = null;
-            recordtype = picker.SelectedIndex;
-            if (recordtype == 0)
+            if (e.Value)
             {
-                path = FileSystem.Current.AppDataDirectory + "/alldatas/" + DateTime.Now.ToString("yyyy_MM_dd");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
-                filename = Path.Combine(path, fn);
-                streamWriter = new StreamWriter(filename);
+                dataDebugModel.RecoredType = 0;
             }
-            else if (recordtype == 1)
+            else
             {
-                path = FileSystem.Current.AppDataDirectory + "/allsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
-                filename = Path.Combine(path, fn);
-                streamWriter = new StreamWriter(filename);
-            }
-            else if (recordtype == 2)
-            {
-                path = FileSystem.Current.AppDataDirectory + "/currentsignals/" + DateTime.Now.ToString("yyyy_MM_dd");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                string fn = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{dataDebugModel.DataInfo.DataName}.txt";
-                filename = Path.Combine(path, fn);
+                dataDebugModel.RecoredType = 1;
             }
         }
     }
