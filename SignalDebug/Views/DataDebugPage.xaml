@@ -19,34 +19,17 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-                <Grid RadioButtonGroup.GroupName="recordType" RadioButtonGroup.SelectedValue="{Binding RecoredType}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <RadioButton Grid.Column="0" Content="原始数据" />
-                    <RadioButton Grid.Column="1" Content="信号数据" />
-
-                </Grid>
-            <!--<StackLayout Orientation="Horizontal" RadioButtonGroup.GroupName="recordType" RadioButtonGroup.SelectedValue="{Binding RecoredType,Mode=TwoWay}">
-                <RadioButton x:Name="w1" Grid.Column="0" Content="原始数据" CheckedChanged="RadioButton_CheckedChanged" />
-                <RadioButton x:Name="w2" Grid.Column="1" Content="信号数据" />
-            </StackLayout>-->
-
-            <!--<Picker x:Name="picker"  TextColor="White" HeightRequest="45"  BackgroundColor="DarkGray" HorizontalOptions="Fill" SelectedIndex="2" VerticalOptions="Fill" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" SelectedIndexChanged="picker_SelectedIndexChanged">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>记录全部数据</x:String>
-                        <x:String>记录全部信号列表数据</x:String>
-                        <x:String>记录当前信号列表数据</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>-->
+            <Grid ColumnSpacing="0" RadioButtonGroup.GroupName="recordType" RadioButtonGroup.SelectedValue="{Binding RecoredType}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <RadioButton Content=" 原始数据" Grid.Column="0" BackgroundColor="Transparent" VerticalOptions="Center" CheckedChanged="RadioButton_CheckedChanged" />
+                <RadioButton Content=" 信号数据" Grid.Column="1" BackgroundColor="Transparent" VerticalOptions="Center"/>
+            </Grid>
             <Button x:Name="RecordData" CornerRadius="0" HeightRequest="45"  HorizontalOptions="Fill" Grid.Column="1" Clicked="Button_Clicked" BackgroundColor="DarkGray" Text="记录【0】" />
             <Button x:Name="ExportData" CornerRadius="0" HeightRequest="45"  HorizontalOptions="Fill" Grid.Column="2" Clicked="ExportData_Clicked" BackgroundColor="DarkGray" Text="导出数据"/>
-        
         </Grid>
-
         <Frame Grid.Row="2" Margin="3" Padding="0" BackgroundColor="Transparent">
             <VerticalStackLayout x:Name="verticalStackLayout"></VerticalStackLayout>
         </Frame>
