@@ -327,12 +327,13 @@ public partial class DataDebugPage : ContentPage
 
     private async void ExportData_Clicked(object sender, EventArgs e)
     {
-        var directorys = Directory.GetDirectories(FileSystem.Current.AppDataDirectory + "/datas/");
+        string temp = FileSystem.Current.AppDataDirectory + "/datas/";
+        var directorys = Directory.GetDirectories(temp);
         ShareDirectoryModel shareDirectoryModel = new ShareDirectoryModel();
         directorys?.ToList().ForEach(d =>
         {
             SignalDebug.Models.DirectoryInfo directoryInfo = new SignalDebug.Models.DirectoryInfo();
-            directoryInfo.Directory = d.Replace(path, string.Empty);
+            directoryInfo.Directory = d.Replace(temp, string.Empty);
             directoryInfo.FullDirectory = d;
             shareDirectoryModel.DirectoryInfos.Add(directoryInfo);
         });
