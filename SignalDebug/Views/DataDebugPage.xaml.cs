@@ -245,7 +245,8 @@ public partial class DataDebugPage : ContentPage
                 isfindNotify = false;
                 for (int j = 0; j < services.Count; j++)
                 {
-                    if (services[j].Properties == GattCharacteristicProperties.Notify)
+                    var GattCharacteristicProperty = services[j].Properties & GattCharacteristicProperties.Notify;
+                    if (GattCharacteristicProperty == GattCharacteristicProperties.Notify)
                     {
                         gattCharacteristic = services[j];
                         gattCharacteristic.CharacteristicValueChanged += Chars_CharacteristicValueChanged;
