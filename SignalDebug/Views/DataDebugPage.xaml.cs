@@ -28,7 +28,7 @@ public partial class DataDebugPage : ContentPage
     /// <summary>
     /// 蓝牙Notify特征
     /// </summary>
-    GattCharacteristic gattCharacteristic = null;
+    List<GattCharacteristic> GattCharacteristics = new List<GattCharacteristic>();
     /// <summary>
     /// 信号控件集合
     /// </summary>
@@ -191,10 +191,13 @@ public partial class DataDebugPage : ContentPage
     }
     protected override void OnDisappearing()
     {
-        if (gattCharacteristic != null)
+        if (GattCharacteristics != null&& GattCharacteristics.Count>0)
         {
-            gattCharacteristic.CharacteristicValueChanged -= Chars_CharacteristicValueChanged;
-            gattCharacteristic = null;
+            GattCharacteristics.ForEach(gatt =>
+            {
+                gatt.CharacteristicValueChanged -= Chars_CharacteristicValueChanged;
+            });
+            GattCharacteristics = new List<GattCharacteristic>();
         }
         if (device != null && device.Gatt != null && device.Gatt.IsConnected)
         {
@@ -238,29 +241,26 @@ public partial class DataDebugPage : ContentPage
             }
             device.Gatt.RequestMtu(512);
             var servs = await device.Gatt.GetPrimaryServicesAsync();
-            bool isfindNotify = false;
+            int findNotifyCount = 0;
             for (int i = 0; i < servs.Count; i++)
             {
                 var services = await servs[i].GetCharacteristicsAsync();
-                isfindNotify = false;
                 for (int j = 0; j < services.Count; j++)
                 {
                     var GattCharacteristicProperty = services[j].Properties & GattCharacteristicProperties.Notify;
                     if (GattCharacteristicProperty == GattCharacteristicProperties.Notify)
                     {
-                        gattCharacteristic = services[j];
-                        gattCharacteristic.CharacteristicValueChanged += Chars_CharacteristicValueChanged;
+                        GattCharacteristics.Add(services[j]);
+                        services[j].CharacteristicValueChanged += Chars_CharacteristicValueChanged;
                         await Task.Delay(500);
-                        await gattCharacteristic.StartNotificationsAsync();
+                        await services[j].StartNotificationsAsync();
                         await Task.Delay(500);
-                        isfindNotify = true;
+                        findNotifyCount++;
                         break;
                     }
                 }
-                if (isfindNotify)
-                    break;
             }
-            if (!isfindNotify)
+            if (findNotifyCount == 0)
                 await DisplayAlert("提示", "未找到可用服务特征", "确认");
         }
     }
