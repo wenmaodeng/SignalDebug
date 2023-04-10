@@ -1,6 +1,7 @@
 using InTheHand.Bluetooth;
 using Microsoft.Maui.Graphics;
 using SignalDebug.ViewModels;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text;
 using YunBang.MAUI.UI.OutDisplay;
@@ -124,64 +125,84 @@ public partial class DataDebugPage : ContentPage
         }
     }
 
-    //}
     /// <summary>
     /// 处理数据
     /// </summary>
-    /// <param name="data"></param>
-    private void HandleData(string data)
+    private void HandleData()
     {
         try
         {
-            string[] tempstrs = data.Split(',');
-            if (tempstrs.Length < 2)
+            if (alldata.IsEmpty)
                 return;
-            if (dataDebugModel != null)
+            if (dataDebugModel == null)
+                return;
+            while (alldata.TryPeek(out string temp))
             {
-                if (dataDebugModel.DataInfo.Lenth != tempstrs.Length)
-                    return;
-                if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
-                    return;
-                dataDebugModel.SignalInfos.ForEach(s =>
+                try
                 {
-                    string value = tempstrs[s.SignalBit];
-                    var element = contentViews.FirstOrDefault(x => x.ClassId == s.SignalId);
-                    switch (s.DataType)
+                    if (temp != dataDebugModel.DataInfo.FrameHead)
                     {
-                        case Models.DataType.BoolSignal:
-                            break;
-                        case Models.DataType.FloatSignal:
-                            TextDisplay textShowFloatSignal = element as TextDisplay;
-                            if (textShowFloatSignal != null)
-                            {
-                                if (MainThread.IsMainThread)
-                                {
-                                    textShowFloatSignal.TextValue = value;
-                                }
-                                else
-                                {
-                                    MainThread.BeginInvokeOnMainThread(() => { textShowFloatSignal.TextValue = value; });
-                                }
-                            }
-                            break;
-                        case Models.DataType.IntSignal:
-                            TextDisplay textShowFloatIntSignal = element as TextDisplay;
-                            if (textShowFloatIntSignal != null)
-                            {
-                                if (MainThread.IsMainThread)
-                                {
-                                    textShowFloatIntSignal.TextValue = value;
-                                }
-                                else
-                                {
-                                    MainThread.BeginInvokeOnMainThread(() => { textShowFloatIntSignal.TextValue = value; });
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+                        alldata.TryDequeue(out temp);
+                        continue;
                     }
-                });
+                        
+                    if (alldata.Count < dataDebugModel.DataInfo.Lenth)
+                    {
+                        break;
+                    }
+                    List<string> tempstrs = new List<string>();
+                    for(int i=0;i< dataDebugModel.DataInfo.Lenth;i++)
+                    {
+                        alldata.TryDequeue(out temp);
+                        tempstrs.Add(temp);
+                    }
+
+                    dataDebugModel.SignalInfos.ForEach(s =>
+                    {
+                        if (s.SignalBit < tempstrs.Count - 1)
+                        {
+                            string value = tempstrs[s.SignalBit];
+                            var element = contentViews.FirstOrDefault(x => x.ClassId == s.SignalId);
+                            switch (s.DataType)
+                            {
+                                case Models.DataType.BoolSignal:
+                                    break;
+                                case Models.DataType.FloatSignal:
+                                    TextDisplay textShowFloatSignal = element as TextDisplay;
+                                    if (textShowFloatSignal != null)
+                                    {
+                                        if (MainThread.IsMainThread)
+                                        {
+                                            textShowFloatSignal.TextValue = value;
+                                        }
+                                        else
+                                        {
+                                            MainThread.BeginInvokeOnMainThread(() => { textShowFloatSignal.TextValue = value; });
+                                        }
+                                    }
+                                    break;
+                                case Models.DataType.IntSignal:
+                                    TextDisplay textShowFloatIntSignal = element as TextDisplay;
+                                    if (textShowFloatIntSignal != null)
+                                    {
+                                        if (MainThread.IsMainThread)
+                                        {
+                                            textShowFloatIntSignal.TextValue = value;
+                                        }
+                                        else
+                                        {
+                                            MainThread.BeginInvokeOnMainThread(() => { textShowFloatIntSignal.TextValue = value; });
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+                }
+                catch
+                { }
             }
         }
         catch
@@ -265,10 +286,19 @@ public partial class DataDebugPage : ContentPage
         }
     }
     string recdata = string.Empty;
+    ConcurrentQueue<string> alldata = new ConcurrentQueue<string>();
     private void Chars_CharacteristicValueChanged(object sender, GattCharacteristicValueChangedEventArgs e)
     {
         recdata = Encoding.ASCII.GetString(e.Value);
-        HandleData(recdata);
+        string[] tempstrs = recdata.Split(',');
+        for(int i=0;i< tempstrs.Length;i++)
+        {
+            if (!string.IsNullOrEmpty(tempstrs[i]))
+            {
+                alldata.Enqueue(tempstrs[i]);
+            }
+        }
+        HandleData();
         DisplayData();
     }
     private void DisplayData()
