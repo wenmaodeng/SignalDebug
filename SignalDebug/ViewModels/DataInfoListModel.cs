@@ -68,6 +68,77 @@ namespace SignalDebug.ViewModels
         public async void InitData()
         {
             DataInfos = await dataSignalDatabase.GetDataInfosAsync();
+
+            if(DataInfos==null|| DataInfos.Count==0|| !DataInfos.Any(d=>d.DataName=="驾考GPS"))
+            {
+                DataInfo dataInfo = new DataInfo();
+                dataInfo.DataId = Guid.NewGuid().ToString();
+                dataInfo.DataName = "驾考GPS";
+                dataInfo.FrameHead = "$KSXT";
+                dataInfo.Lenth = 23;
+                await dataSignalDatabase.SaveDataInfoAsync(dataInfo);
+                SignalInfo signalInfo = new SignalInfo();
+                signalInfo.DataId = dataInfo.DataId;
+                signalInfo.SignalId= Guid.NewGuid().ToString();
+                signalInfo.SignalName = "东向坐标";
+                signalInfo.SignalBit = 14;
+                signalInfo.Sort = 1;
+                signalInfo.Unit = "米";
+                signalInfo.Enabled = true;
+                signalInfo.DataType = DataType.FloatSignal;
+                await dataSignalDatabase.DeleteSignalInfoAsync(signalInfo);
+                signalInfo = new SignalInfo();
+                signalInfo.DataId = dataInfo.DataId;
+                signalInfo.SignalId = Guid.NewGuid().ToString();
+                signalInfo.SignalName = "北向坐标";
+                signalInfo.SignalBit = 15;
+                signalInfo.Sort = 2;
+                signalInfo.Unit = "米";
+                signalInfo.Enabled = true;
+                signalInfo.DataType = DataType.FloatSignal;
+                await dataSignalDatabase.DeleteSignalInfoAsync(signalInfo);
+                signalInfo = new SignalInfo();
+                signalInfo.DataId = dataInfo.DataId;
+                signalInfo.SignalId = Guid.NewGuid().ToString();
+                signalInfo.SignalName = "定位状态";
+                signalInfo.SignalBit = 10;
+                signalInfo.Sort = 3;
+                signalInfo.Unit = "";
+                signalInfo.Enabled = true;
+                signalInfo.DataType = DataType.IntSignal;
+                await dataSignalDatabase.DeleteSignalInfoAsync(signalInfo);
+                signalInfo = new SignalInfo();
+                signalInfo.DataId = dataInfo.DataId;
+                signalInfo.SignalId = Guid.NewGuid().ToString();
+                signalInfo.SignalName = "定向状态";
+                signalInfo.SignalBit = 11;
+                signalInfo.Sort = 4;
+                signalInfo.Unit = "";
+                signalInfo.Enabled = true;
+                signalInfo.DataType = DataType.IntSignal;
+                await dataSignalDatabase.DeleteSignalInfoAsync(signalInfo);
+                signalInfo = new SignalInfo();
+                signalInfo.DataId = dataInfo.DataId;
+                signalInfo.SignalId = Guid.NewGuid().ToString();
+                signalInfo.SignalName = "前天线星数";
+                signalInfo.SignalBit = 12;
+                signalInfo.Sort = 5;
+                signalInfo.Unit = "";
+                signalInfo.Enabled = true;
+                signalInfo.DataType = DataType.IntSignal;
+                await dataSignalDatabase.DeleteSignalInfoAsync(signalInfo);
+                signalInfo = new SignalInfo();
+                signalInfo.DataId = dataInfo.DataId;
+                signalInfo.SignalId = Guid.NewGuid().ToString();
+                signalInfo.SignalName = "后天线星数";
+                signalInfo.SignalBit = 13;
+                signalInfo.Sort = 6;
+                signalInfo.Unit = "";
+                signalInfo.Enabled = true;
+                signalInfo.DataType = DataType.IntSignal;
+                await dataSignalDatabase.DeleteSignalInfoAsync(signalInfo);
+                DataInfos = await dataSignalDatabase.GetDataInfosAsync();
+            }
         }
         public async void DeleteDataInfo()
         {
