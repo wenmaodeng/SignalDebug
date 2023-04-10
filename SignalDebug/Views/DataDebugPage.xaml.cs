@@ -287,19 +287,30 @@ public partial class DataDebugPage : ContentPage
     }
     string recdata = string.Empty;
     ConcurrentQueue<string> alldata = new ConcurrentQueue<string>();
+    string alldatastring = string.Empty;
     private void Chars_CharacteristicValueChanged(object sender, GattCharacteristicValueChangedEventArgs e)
     {
         recdata = Encoding.ASCII.GetString(e.Value);
-        string[] tempstrs = recdata.Split(',');
-        for(int i=0;i< tempstrs.Length;i++)
+        DisplayData();
+        if (dataDebugModel == null)
+            return;
+        alldatastring += recdata;
+        if (alldatastring.IndexOf(dataDebugModel.DataInfo.FrameHead) == 0)
         {
-            if (!string.IsNullOrEmpty(tempstrs[i]))
+            string[] tempstrs = alldatastring.Split(',');
+            if (tempstrs.Length < dataDebugModel.DataInfo.Lenth)
+                return;
+            for (int i = 0; i < dataDebugModel.DataInfo.Lenth; i++)
             {
                 alldata.Enqueue(tempstrs[i]);
             }
+            HandleData();
+            alldatastring = string.Empty;
         }
-        HandleData();
-        DisplayData();
+        else
+        {
+            alldatastring = string.Empty;
+        }
     }
     private void DisplayData()
     {
