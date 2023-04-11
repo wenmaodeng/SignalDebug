@@ -286,6 +286,7 @@ public partial class DataDebugPage : ContentPage
         }
     }
     string recdata = string.Empty;
+    string rightdata = string.Empty;
     ConcurrentQueue<string> alldata = new ConcurrentQueue<string>();
     string alldatastring = string.Empty;
     private void Chars_CharacteristicValueChanged(object sender, GattCharacteristicValueChangedEventArgs e)
@@ -300,6 +301,7 @@ public partial class DataDebugPage : ContentPage
             string[] tempstrs = alldatastring.Split(',');
             if (tempstrs.Length < dataDebugModel.DataInfo.Lenth)
                 return;
+            rightdata = alldatastring;
             for (int i = 0; i < dataDebugModel.DataInfo.Lenth; i++)
             {
                 alldata.Enqueue(tempstrs[i]);
@@ -344,10 +346,7 @@ public partial class DataDebugPage : ContentPage
     }
     private void Button_Clicked(object sender, EventArgs e)
     {
-        recdata = "yuyuyuy";
-        recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"¡¾{datacount + 1}¡¿:" + recdata;
-        SaveData(recdata);
-        string[] tempstrs = recdata.Split(',');
+        string[] tempstrs = rightdata.Split(',');
         if (tempstrs.Length < 2)
             return;
         if (dataDebugModel == null)
@@ -356,15 +355,16 @@ public partial class DataDebugPage : ContentPage
             return;
         if (tempstrs[0] != dataDebugModel.DataInfo.FrameHead)
             return;
+        string rightrecdata = string.Empty;
         if (dataDebugModel.RecoredType == 1)
         {
-            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"¡¾{datacount + 1}¡¿:" + GetSignals(tempstrs);
+            rightrecdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"¡¾{datacount + 1}¡¿:" + GetSignals(tempstrs);
         }
         else
         {
-            recdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"¡¾{datacount + 1}¡¿:" + recdata;
+            rightrecdata = DateTime.Now.ToString("yyyyMMddHHmmss") + $"¡¾{datacount + 1}¡¿:" + rightdata;
         }
-        SaveData(recdata);
+        SaveData(rightrecdata);
     }
 
     private async void ExportData_Clicked(object sender, EventArgs e)
