@@ -10,13 +10,15 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="45"/>
+                    <RowDefinition Height="45"/>
                     <RowDefinition Height="3"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" FontSize="Title" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="Center" VerticalTextAlignment="Center" Text="数据源列表"/>
-                <Button Grid.Row="0" BorderColor="Transparent"  FontSize="Large"  BackgroundColor="Transparent" HorizontalOptions="End"  VerticalOptions="Center"  Text="+" Command="{Binding AddDataInfoCommand}"/>
-                <BoxView Grid.Row="1"  Color="White" CornerRadius="1" Margin="3,0,3,0"/>
-                <CollectionView x:Name="collectionView" Margin="0,3,0,0" Grid.Row="2" ItemsSource="{Binding DataInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
+                <Button x:Name="recorddata" Grid.Row="0" BorderColor="Transparent"  FontSize="Small" TextColor="Blue"  BackgroundColor="Transparent" HorizontalOptions="Start"  VerticalOptions="Center"  Text="历史记录数据" Clicked="recorddata_Clicked"/>
+                <Button Grid.Row="0" BorderColor="Transparent"  FontSize="Small" TextColor="Blue"  BackgroundColor="Transparent" HorizontalOptions="End"  VerticalOptions="Center"  Text="新建数据源" Command="{Binding AddDataInfoCommand}"/>
+                <Label Grid.Row="1" FontSize="Title" TextColor="White" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="Center" VerticalTextAlignment="Center" Text="数据源列表"/>
+                <BoxView Grid.Row="2"  Color="White" CornerRadius="1" Margin="3,0,3,0"/>
+                <CollectionView x:Name="collectionView" Margin="0,3,0,0" Grid.Row="3" ItemsSource="{Binding DataInfos}" SelectionMode="Single"  SelectionChanged="CollectionView_SelectionChanged">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView HeightRequest="45" Padding="0">
@@ -36,7 +38,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="70"/>
                                         </Grid.ColumnDefinitions>
-                                        <Label Margin="10,3,0,3"  HeightRequest="30" VerticalTextAlignment="Center" FontSize="Large" TextColor="Black" Text="{Binding DataName}" />
+                                        <Label Margin="10,3,0,3"  HeightRequest="30" VerticalTextAlignment="Center" FontSize="Large" TextColor="White" Text="{Binding DataName}" />
                                         <Button Margin="0" VerticalOptions="Center" HorizontalOptions="Fill" Grid.Column="1"  BackgroundColor="Transparent" BorderColor="Transparent" Text="启动" TextColor="White" FontSize="Small"  CommandParameter="{Binding DataId}" Clicked="Button_Clicked"/>
                                     </Grid>
                                 </Frame>

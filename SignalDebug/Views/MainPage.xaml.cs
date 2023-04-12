@@ -92,5 +92,21 @@ public partial class MainPage : ContentPage
         DataInfoListModel dataInfoListModel = this.BindingContext as DataInfoListModel;
         dataInfoListModel.DataInfo = datainfo;
     }
+
+
+    private async void recorddata_Clicked(object sender, EventArgs e)
+    {
+        string temp = FileSystem.Current.AppDataDirectory + "/datas/";
+        var directorys = Directory.GetDirectories(temp);
+        ShareDirectoryModel shareDirectoryModel = new ShareDirectoryModel();
+        directorys?.ToList().ForEach(d =>
+        {
+            SignalDebug.Models.DirectoryInfo directoryInfo = new SignalDebug.Models.DirectoryInfo();
+            directoryInfo.Directory = d.Replace(temp, string.Empty);
+            directoryInfo.FullDirectory = d;
+            shareDirectoryModel.DirectoryInfos.Add(directoryInfo);
+        });
+        await Navigation.PushAsync(new ShareDirectoryPage { BindingContext = shareDirectoryModel });
+    }
 }
 
