@@ -98,6 +98,8 @@ public partial class MainPage : ContentPage
     {
         string temp = FileSystem.Current.AppDataDirectory + "/datas/";
         var directorys = Directory.GetDirectories(temp);
+        if (directorys == null || directorys.Length == 0)
+            return;
         ShareDirectoryModel shareDirectoryModel = new ShareDirectoryModel();
         directorys?.ToList().ForEach(d =>
         {
