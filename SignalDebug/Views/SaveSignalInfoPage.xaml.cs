@@ -13,6 +13,10 @@ public partial class SaveSignalInfoPage : ContentPage
         MessagingCenter.Subscribe<SaveSignalInfoModel, string>(this, "SaveSignalInfo", async (sender, arg) =>
         {
             await DisplayAlert("提示", $"{arg}！", "确认");
+            if(arg == "保存成功")
+            {
+                await Shell.Current.GoToAsync("..");
+            }
         });
         base.OnAppearing();
     }

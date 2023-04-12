@@ -254,7 +254,7 @@ public partial class DataDebugPage : ContentPage
                 await device.Gatt.ConnectAsync();
                 count++;
                 await Task.Delay(500);
-                if (count == 5)
+                if (count >= 5)
                 {
                     await DisplayAlert("提示", "连接蓝牙失败", "确认");
                     return;
