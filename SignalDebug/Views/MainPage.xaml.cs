@@ -7,19 +7,27 @@ namespace SignalDebug.Views;
 public partial class MainPage : ContentPage
 {
     DataSignalDatabase dataSignalDatabase;
+    BluetoothLeService bluetoothLeService;
 
-    public MainPage(DataSignalDatabase _dataSignalDatabase)
+    public MainPage(DataSignalDatabase _dataSignalDatabase, BluetoothLeService _bluetoothLeService)
 	{
 		InitializeComponent();
         dataSignalDatabase = _dataSignalDatabase;
+        bluetoothLeService = _bluetoothLeService;
         var temp = new DataInfoListModel(_dataSignalDatabase);
         this.BindingContext = temp;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         var temp = this.BindingContext as DataInfoListModel;
         temp.InitData();
+
+        if(!BluetoothLeService.IsBluetoothLePower)
+        {
+            BluetoothLeService.IsBluetoothLePower= await bluetoothLeService.CheckAndRequestBluetoothPermission();
+        }
+
         MessagingCenter.Subscribe<DataInfoListModel>(this, "AddDataInfo", async (sender) =>
         {
             SaveDataInfoModel saveDataInfoModel = new SaveDataInfoModel(dataSignalDatabase);
