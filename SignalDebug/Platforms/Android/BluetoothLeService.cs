@@ -27,6 +27,8 @@ namespace SignalDebug.Services
                 {
                     (global::Android.Manifest.Permission.AccessFineLocation, true),
                     (global::Android.Manifest.Permission.AccessCoarseLocation, true),
+                    (global::Android.Manifest.Permission.AccessNetworkState, true),
+                    (global::Android.Manifest.Permission.Internet, true),
                     (global::Android.Manifest.Permission.Bluetooth, true),
                     (global::Android.Manifest.Permission.BluetoothAdmin, true),
                 }.ToArray();
